@@ -1,0 +1,155 @@
+/* ================= PAGE ================= */
+.basic-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+
+/* ================= DOMAIN BLOCK ================= */
+.domain {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+/* header row */
+.domain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.domain-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* toggle icon */
+.toggle {
+  transition: transform 0.3s ease;
+}
+
+/* rotate when open */
+.toggle.open {
+  transform: rotate(180deg);
+}
+
+
+/* ================= COURSE GRID ================= */
+.courses {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+
+/* ================= COURSE CARD ================= */
+.course-card {
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ================= AUTO COLOR THEMES ================= */
+.color-0 {
+  background: #eef2ff;
+  border-left: 5px solid #6a5acd;
+}
+
+.color-1 {
+  background: #e8f9ff;
+  border-left: 5px solid #00bcd4;
+}
+
+.color-2 {
+  background: #eafbea;
+  border-left: 5px solid #4caf50;
+}
+
+.color-3 {
+  background: #fff4e5;
+  border-left: 5px solid #ff9800;
+}
+
+
+/* ================= TOP ================= */
+.course-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.course-head h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+
+/* ================= ARROW ================= */
+.arrow {
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.arrow:hover {
+  background: black;
+  color: white;
+  transform: translateX(2px);
+}
+
+
+/* ================= TEXT ================= */
+.progress-text {
+  font-size: 12px;
+  margin: 10px 0 6px;
+}
+
+
+/* ================= PROGRESS ================= */
+.progress-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #6a5acd, #9f8cff);
+  border-radius: 10px;
+}
+
+
+/* ================= EMPTY ================= */
+.empty {
+  font-size: 13px;
+  color: gray;
+}
+
+
+/* ================= MOBILE ================= */
+@media (max-width: 900px) {
+  .courses {
+    grid-template-columns: 1fr;
+  }
+}

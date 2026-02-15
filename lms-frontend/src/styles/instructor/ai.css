@@ -1,0 +1,70 @@
+.ai-page {
+  height: calc(100vh - 60px); /* minus header */
+  display: flex;
+  flex-direction: column;
+  background: #f9fafc;
+}
+
+/* top title */
+.ai-header {
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+/* messages area */
+.ai-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* same bubble style */
+.msg {
+  max-width: 60%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.msg.bot {
+  background: #e0e7ff;
+  align-self: flex-start;
+}
+
+.msg.user {
+  background: #4caf50;
+  color: white;
+  align-self: flex-end;
+}
+
+/* input */
+.ai-input {
+  display: flex;
+  border-top: 1px solid #eee;
+  background: white;
+}
+
+.ai-input input {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.ai-input input:focus {
+  outline: none;
+}
+
+.ai-input button {
+  border: none;
+  background: #4caf50;
+  color: white;
+  padding: 0 18px;
+  cursor: pointer;
+}

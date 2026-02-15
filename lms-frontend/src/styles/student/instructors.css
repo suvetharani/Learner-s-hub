@@ -1,0 +1,84 @@
+/* ================= PAGE ================= */
+.instructors-page {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+
+/* ================= CARD ================= */
+.instructor-card {
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: white;
+  position: relative;
+}
+
+.instructor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ================= IMAGE ================= */
+.instructor-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+
+/* ================= TEXT ================= */
+.instructor-card h4 {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.domain-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6a5acd;
+  margin-bottom: 6px;
+}
+
+.info {
+  font-size: 12px;
+  margin: 2px 0;
+  color: #555;
+}
+
+
+/* ================= MESSAGE BUTTON ================= */
+.message-btn {
+  margin: 12px auto 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid black;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.message-btn:hover {
+  background: black;
+  color: white;
+  transform: scale(1.1);
+}
+
+
+/* ================= MOBILE ================= */
+@media (max-width: 900px) {
+  .instructors-page {
+    grid-template-columns: 1fr;
+  }
+}

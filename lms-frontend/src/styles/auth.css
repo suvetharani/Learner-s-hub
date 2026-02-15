@@ -1,0 +1,129 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #e6e9f0;
+}
+
+/* center wrapper */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* card */
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 35px 25px;
+  border-radius: 20px;
+  background: #e6e9f0;
+  box-shadow: 10px 10px 20px #c5c8ce,
+              -10px -10px 20px #ffffff;
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+
+/* input */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #e6e9f0;
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  border-radius: 12px;
+  box-shadow: inset 5px 5px 10px #c5c8ce,
+              inset -5px -5px 10px #ffffff;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+/* role boxes */
+.role-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.role-box {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 5px 5px 10px #c5c8ce,
+              -5px -5px 10px #ffffff;
+}
+
+.role-box.active {
+  box-shadow: inset 5px 5px 10px #c5c8ce,
+              inset -5px -5px 10px #ffffff;
+  font-weight: bold;
+}
+
+/* button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: #e6e9f0;
+  box-shadow: 5px 5px 10px #c5c8ce,
+              -5px -5px 10px #ffffff;
+}
+
+.auth-btn:hover {
+  box-shadow: inset 5px 5px 10px #c5c8ce,
+              inset -5px -5px 10px #ffffff;
+}
+
+.switch-text {
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.switch-text span {
+  color: blue;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* mobile tuning */
+@media (max-width: 400px) {
+  .auth-card {
+    padding: 25px 18px;
+  }
+}
+.error-text {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

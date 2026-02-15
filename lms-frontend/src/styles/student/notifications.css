@@ -1,0 +1,73 @@
+/* ================= PAGE ================= */
+.notifications-page {
+  padding: 20px;
+  background: #FBFBFB;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.notifications-page h2 {
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+/* ================= EMPTY ================= */
+.empty {
+  text-align: center;
+  color: gray;
+  margin-top: 40px;
+}
+
+
+/* ================= LIST ================= */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+/* ================= CARD ================= */
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* unread highlight */
+.notification-card.unread {
+  border-left: 5px solid #C5BAFF;
+  background: #F5F3FF;
+}
+
+
+/* ================= ICON ================= */
+.notification-card .icon {
+  font-size: 18px;
+  margin-top: 3px;
+}
+
+
+/* ================= CONTENT ================= */
+.notification-card .content p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.notification-card .content span {
+  font-size: 12px;
+  color: gray;
+}

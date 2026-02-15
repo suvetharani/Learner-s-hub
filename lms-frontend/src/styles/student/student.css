@@ -1,0 +1,604 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #FBFBFB;
+}
+
+.student-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #C4D9FF;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  /* ADD THESE */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-item:hover {
+  background: #C5BAFF;
+}
+
+/* left side (icon + text) */
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* plus */
+.add-icon {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 20px;
+  min-width: 0;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* hamburger */
+.hamburger {
+  font-size: 20px;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* search takes leftover space */
+.search-box {
+  width: 30%;        /* ⭐ your requirement */
+  min-width: 90px;   /* prevent too tiny */
+  flex: 0 0 auto;    /* ⭐ STOP growing */
+}
+
+
+.search-box input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* icons NEVER shrink */
+.header-icons {
+  display: flex;
+  gap: 12px;
+  flex: 0 0 auto;   /* ⭐ KEY LINE */
+  color: black;
+}
+
+.h-icon {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* hide hamburger in laptop */
+@media (min-width: 901px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 50px) {
+  .header {
+    display: flex;
+    flex-direction: row;   /* same line */
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* push icons to right */
+  .header-icons {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+
+  .h-icon {
+    font-size: 18px;
+  }
+}
+
+.header-icons {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+
+
+/* BANNER */
+/* ================= BANNER ================= */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+
+  background: linear-gradient(to right, #eef2ff, #c5baff);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+
+  font-family: "Poppins", sans-serif;
+}
+
+/* LEFT */
+.banner-left {
+  max-width: 60%;
+}
+
+.banner-title {
+  margin: 0 0 10px 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.banner-sub {
+  margin: 0;
+  font-size: 15px;
+  color: #444;
+  font-weight: 400;
+}
+
+/* RIGHT */
+.banner-right img {
+  width: 180px;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .banner {
+    padding: 18px;
+  }
+
+  .banner-left {
+    max-width: 65%;
+  }
+
+  .banner-title {
+    font-size: 18px;
+  }
+
+  .banner-sub {
+    font-size: 12px;
+  }
+
+  .banner-right img {
+    width: 110px;
+  }
+}
+
+
+
+/* COURSES */
+.course-list {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.course-card {
+  min-width: 200px;
+
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #C5BAFF;
+  border-radius: 10px;
+}
+
+/* BOTTOM */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+/* hide mobile controls in laptop */
+.topbar {
+  display: none;
+}
+
+.close-btn {
+  display: none;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 900px) {
+
+  /* hamburger visible */
+  .topbar {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* close button visible */
+  .close-btn {
+    display: block;
+    text-align: right;
+    cursor: pointer;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  /* sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 80%;              /* ⭐ bigger */
+    max-width: 320px;        /* limit for large phones */
+    background: #C4D9FF;
+    padding: 20px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;        /* ⭐ scroll */
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  /* menu items */
+  .menu-item {
+    padding: 14px;           /* ⭐ bigger touch area */
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  /* main content */
+  .main {
+    padding: 15px;
+  }
+
+  /* bottom grid stack */
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* HAMBURGER */
+.hamburger {
+  font-size: 20px;
+  cursor: pointer;
+}
+@media (min-width: 901px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+
+/* CLOSE BUTTON */
+.close-btn {
+  text-align: right;
+  cursor: pointer;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.menu-item {
+  user-select: none;
+}
+.logo {
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: black;
+}
+
+/* menu */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: black;
+}
+
+.menu-item:hover {
+  background: #C5BAFF;
+}
+
+/* icons */
+.icon {
+  font-size: 18px;
+  display: flex;
+}
+
+/* MAKE PAGE NARROWER ON SMALL DEVICES */
+@media (max-width: 900px) {
+  .main {
+    max-width: 410px;   /* ⭐ adjust */
+    margin: 0 auto;     /* center */
+  }
+}
+
+/* ================= COURSE LIST ================= */
+.course-list {
+  display: flex;
+  gap: 15px;
+
+  overflow-x: auto;   /* ⭐ scroll horizontally */
+  overflow-y: hidden;
+
+  flex-wrap: nowrap;  /* ⭐ never go to next line */
+  width: 100%;        /* ⭐ stay inside screen */
+  padding-bottom: 5px;
+}
+
+
+/* CARD */
+.course-card {
+  min-width: 220px;   /* fixed card width */
+  flex-shrink: 0;     /* ⭐ do not compress */
+}
+
+.course-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.course-list::-webkit-scrollbar-thumb {
+  background: #C5BAFF;
+  border-radius: 10px;
+}
+
+
+/* TOP ROW */
+.course-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.course-top h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ARROW CIRCLE */
+.go-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* TEXT */
+.progress-text {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+/* PROGRESS */
+.progress-bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: black;
+  border-radius: 10px;
+}
+
+/* RANKING WRAPPER */
+/* RANKING BOX BACKGROUND */
+.ranking {
+  background: linear-gradient(to right, #E8F9FF, #C4D9FF);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+
+/* title */
+.ranking-title {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* row */
+.rank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 12px;
+  margin-bottom: 10px;
+
+  background: white;           /* ⭐ row background */
+  border-radius: 10px;
+}
+
+.rank-row:last-child {
+  margin-bottom: 0;
+}
+
+/* ⭐ highlight first rank */
+.rank-row.first {
+  background: #C5BAFF;
+  font-weight: bold;
+}
+
+/* left side */
+.rank-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* rank number */
+.rank-number {
+  font-size: 13px;
+}
+
+/* medal */
+.medal-icon {
+  color: black;
+  font-size: 18px;
+}
+
+/* name */
+.rank-name {
+  font-size: 14px;
+}
+
+/* score */
+.rank-score {
+  font-weight: bold;
+}
+
+/* ================= WEEKLY CARD ================= */
+
+.weekly-card {
+  background: linear-gradient(to bottom right, #ffffff, #f7f7f7);
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #e5e5e5;
+}
+
+/* header */
+.weekly-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.weekly-header h4 {
+  margin: 0;
+}
+
+/* ================= CHART ================= */
+/* ================= WEEKLY CARD ================= */
+
+.weekly-card {
+  background: linear-gradient(to bottom right, #ffffff, #f8faff);
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #e6e6e6;
+}
+
+.weekly-header {
+  margin-bottom: 15px;
+}
+
+/* ================= CHART ================= */
+
+.chart-area {
+  height: 220px;              /* ⭐ VERY IMPORTANT */
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* group */
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30px;
+}
+
+/* track (background) */
+.bar-track {
+  height: 180px;              /* ⭐ FIXED */
+  width: 100%;
+  background: #e9edf7;        /* light background */
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-end;      /* fill grows from bottom */
+  overflow: hidden;
+}
+
+/* actual bar */
+/* allow tooltip position */
+.bar-fill {
+  width: 100%;
+  background: linear-gradient(to top, #6a5acd, #9f8cff);
+  border-radius: 8px;
+  transition: height 0.4s ease;
+  position: relative;   /* ⭐ important */
+}
+
+/* tooltip */
+.tooltip {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+/* show on hover */
+.bar-fill:hover .tooltip {
+  opacity: 1;
+}

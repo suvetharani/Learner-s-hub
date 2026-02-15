@@ -1,0 +1,123 @@
+/* ================= POSITION ================= */
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  height: 420px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+  z-index: 2000;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ================= HEADER ================= */
+.chatbot-header {
+  background: #c5baff;
+  padding: 10px 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-header .actions svg {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* ================= BODY ================= */
+.chatbot-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #fbfbfb;
+
+  /* ⭐ makes messages behave like real chat */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= MESSAGES ================= */
+.msg {
+  max-width: 75%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  word-wrap: break-word;
+}
+
+/* BOT → LEFT */
+.msg.bot {
+  background: #c4d9ff;
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+/* USER → RIGHT */
+.msg.user {
+  background: #00bcd4;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+/* ================= INPUT ================= */
+.chatbot-input {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+.chatbot-input input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 13px;
+}
+
+.chatbot-input input:focus {
+  outline: none;
+}
+
+.chatbot-input button {
+  background: #4caf50;
+  border: none;
+  color: white;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+/* ================= MINIMIZED ================= */
+.chatbot.mini {
+  height: auto;
+}
+
+.chatbot.mini .chatbot-body,
+.chatbot.mini .chatbot-input {
+  display: none;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 500px) {
+  .chatbot {
+    width: 95%;
+    right: 10px;
+    bottom: 10px;
+  }
+}

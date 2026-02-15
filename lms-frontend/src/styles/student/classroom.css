@@ -1,0 +1,56 @@
+/* ================= PAGE ================= */
+.classroom-page {
+  padding: 20px;
+  background: #FBFBFB;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* ================= TITLE ================= */
+.classroom-page h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #4a4a4a;
+}
+
+/* ================= GRID ================= */
+.batch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* ================= BATCH CARD ================= */
+.batch-card {
+  background: linear-gradient(135deg, #C4D9FF, #C5BAFF);
+  color: #333;
+  padding: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.batch-card h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #2a2a2a;
+}
+
+.batch-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.batch-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .batch-grid {
+    grid-template-columns: 1fr;
+  }
+}
