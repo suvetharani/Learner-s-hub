@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaIdCard } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import "../styles/auth.css";
 
 function Login() {
@@ -14,18 +14,57 @@ function Login() {
 
   const [errors, setErrors] = useState({});
 
+  // ================= VALIDATION =================
   const validate = () => {
     let err = {};
+
     if (!form.email) err.email = "Email is required";
     if (!form.password) err.password = "Password is required";
+
     setErrors(err);
     return Object.keys(err).length === 0;
   };
 
-  const submit = () => {
+  // ================= SUBMIT =================
+  const submit = async () => {
     if (!validate()) return;
 
-    alert("Login success (backend later)");
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      // Store token
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+
+      alert("Login successful");
+
+      // Role-based navigation
+      if (data.role === "admin") {
+        navigate("/instructor");
+      } else {
+        navigate("/student");
+      }
+
+    } catch (err) {
+      console.log(err);
+      alert("Server error");
+    }
   };
 
   return (
@@ -34,31 +73,46 @@ function Login() {
         <div className="auth-title">Welcome back</div>
         <div className="auth-sub">Please sign in to continue</div>
 
+        {/* EMAIL FIELD */}
         <div className="input-group">
-          <FaIdCard />
+          <FaEnvelope />
           <input
-            placeholder="Roll Number"
-            value={form.roll}
-            onChange={(e) => setForm({ ...form, roll: e.target.value })}
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
           />
         </div>
         {errors.email && <div className="error-text">{errors.email}</div>}
 
+        {/* PASSWORD FIELD */}
         <div className="input-group">
           <FaLock />
           <input
             type={show ? "text" : "password"}
             placeholder="Password"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
           />
           {show ? (
-            <FaEyeSlash onClick={() => setShow(false)} style={{ cursor: "pointer" }} />
+            <FaEyeSlash
+              onClick={() => setShow(false)}
+              style={{ cursor: "pointer" }}
+            />
           ) : (
-            <FaEye onClick={() => setShow(true)} style={{ cursor: "pointer" }} />
+            <FaEye
+              onClick={() => setShow(true)}
+              style={{ cursor: "pointer" }}
+            />
           )}
         </div>
-        {errors.password && <div className="error-text">{errors.password}</div>}
+        {errors.password && (
+          <div className="error-text">{errors.password}</div>
+        )}
 
         <button className="auth-btn" onClick={submit}>
           Sign In
@@ -66,7 +120,9 @@ function Login() {
 
         <div className="switch-text">
           Don't have an account?{" "}
-          <span onClick={() => navigate("/signup")}>Sign up</span>
+          <span onClick={() => navigate("/signup")}>
+            Sign up
+          </span>
         </div>
       </div>
     </div>

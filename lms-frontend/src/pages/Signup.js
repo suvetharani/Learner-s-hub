@@ -46,12 +46,35 @@ function Signup() {
     return Object.keys(err).length === 0;
   };
 
-  const submit = () => {
-    if (!validate()) return;
+const submit = async () => {
+  if (!validate()) return;
 
-    console.log(form); // later send to backend
-    alert("Signup success (backend later)");
-  };
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ...form,
+        role
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.msg || "Signup failed");
+      return;
+    }
+
+    alert("Signup successful");
+    navigate("/"); // go to login
+  } catch (err) {
+    console.log(err);
+    alert("Server error");
+  }
+};
 
   return (
     <div className="auth-wrapper">
