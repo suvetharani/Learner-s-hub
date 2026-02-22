@@ -6,11 +6,28 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password, role, adminSecret } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+      roll,
+      adminSecret,
+      degree,
+      specialization,
+      experience,
+      bio
+    } = req.body;
 
-    // Prevent fake admin signup
+    // Check existing email
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Admin secret validation
     if (role === "admin") {
-      if (adminSecret !== ADMIN_SECRET) {
+      if (adminSecret !== process.env.ADMIN_SECRET) {
         return res.status(403).json({ message: "Invalid admin secret key" });
       }
     }
@@ -20,17 +37,23 @@ exports.signup = async (req, res) => {
     const user = new User({
       name,
       email,
+      rollNumber: role === "student" ? roll : undefined,
       password: hashedPassword,
       role,
-      status: role === "admin" ? "approved" : "pending"
+      status: role === "admin" ? "approved" : "pending",
+      degree: role === "admin" ? degree : undefined,
+      specialization: role === "admin" ? specialization : undefined,
+      experience: role === "admin" ? experience : undefined,
+      bio: role === "admin" ? bio : undefined
     });
 
     await user.save();
 
     res.status(201).json({
-      message: role === "student"
-        ? "Signup successful. Wait for admin approval."
-        : "Admin account created"
+      message:
+        role === "student"
+          ? "Signup successful. Wait for admin approval."
+          : "Instructor account created successfully"
     });
 
   } catch (err) {
