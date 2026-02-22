@@ -68,7 +68,7 @@ const submit = async () => {
       return;
     }
 
-    alert("Signup successful");
+    //alert("Signup successful");
     navigate("/"); // go to login
   } catch (err) {
     console.log(err);

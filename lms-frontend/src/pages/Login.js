@@ -52,7 +52,7 @@ function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
 
-      alert("Login successful");
+      //alert("Login successful");
 
       // Role-based navigation
       if (data.role === "admin") {
