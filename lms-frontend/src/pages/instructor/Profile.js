@@ -43,13 +43,13 @@ export default function Profile() {
 
         <div className="profile-image">
           <img
-            src={
-              user.profileImage
-                ? `http://localhost:5000/uploads/${user.profileImage}`
-                : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            }
-            alt="profile"
-          />
+  src={
+    user.profileImage
+      ? `http://localhost:5000/${user.profileImage}`
+      : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+  }
+  alt="profile"
+/>
         </div>
 
         <label className="upload-btn">
