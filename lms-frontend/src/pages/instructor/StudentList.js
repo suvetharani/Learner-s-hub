@@ -78,9 +78,12 @@ function StudentList() {
             
             <span>{s.email}</span>
             <span>{s.rollNumber}</span>
-            <span className="message-icon">
-              <FaEnvelope />
-            </span>
+<span
+  className="message-icon clickable"
+  onClick={() => navigate(`/instructor/messages/${s._id}`)}
+>
+  <FaEnvelope />
+</span>
           </div>
         ))}
       </div>
@@ -95,7 +98,12 @@ function StudentList() {
           pendingStudents.map((s) => (
             <div key={s._id} className="pending-row">
               <span>{s.name}</span>
-              <span>{s.email}</span>
+              <span
+  className="student-email clickable"
+  onClick={() => window.location.href = `mailto:${s.email}`}
+>
+  {s.email}
+</span>
               <span>{s.rollNumber}</span>
               <button onClick={() => approveStudent(s._id)}>
                 Approve

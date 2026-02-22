@@ -119,3 +119,12 @@ body {
     padding: 10px 0;
   }
 }
+
+.clickable {
+  cursor: pointer;
+  color: #2a6df4;
+}
+
+.clickable:hover {
+  text-decoration: underline;
+}

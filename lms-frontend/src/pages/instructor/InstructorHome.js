@@ -21,11 +21,12 @@ import Instructors from "./Instructors";
 import Classroom from "./Classroom";
 import CourseCreation from "./CourseCreation";
 import TestCreation from "./TestCreation";
-import Messages from "./Messages";
+import MessagePage from "./Messages";
 import Notes from "./Notes";
 import Ranking from "./Ranking";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
+import StudentProfile from "./StudentProfile";
 
 /* ✅ NEW BOXES */
 import StudentsPreview from "../../components/instructor/StudentsPreview";
@@ -65,17 +66,18 @@ function InstructorHome() {
           {/* ================= OTHER PAGES ================= */}
           <Route path="ai" element={<AIAssistant />} />
           <Route path="StudentList" element={<StudentList />} />
-          <Route path="students/:id" element={<StudentDetails />} />
+          {/* <Route path="students/:id" element={<StudentDetails />} /> */}
           <Route path="academics" element={<Academics />} />
           <Route path="instructors" element={<Instructors />} />
           <Route path="classroom" element={<Classroom />} />
           <Route path="course-creation" element={<CourseCreation />} />
           <Route path="test-creation" element={<TestCreation />} />
-          <Route path="messages" element={<Messages />} />
+          <Route path="messages" element={<MessagePage />} />
           <Route path="notes" element={<Notes />} />
           <Route path="ranking" element={<Ranking />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="students/:id" element={<StudentProfile />} />
         </Routes>
       </div>
     </div>
