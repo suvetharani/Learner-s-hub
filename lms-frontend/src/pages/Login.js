@@ -26,46 +26,49 @@ function Login() {
   };
 
   // ================= SUBMIT =================
-  const submit = async () => {
-    if (!validate()) return;
+const submit = async () => {
+  if (!validate()) return;
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password
-        })
-      });
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password
+      })
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        alert(data.message || "Login failed");
-        return;
-      }
-
-      // Store token
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-
-      //alert("Login successful");
-
-      // Role-based navigation
-      if (data.role === "admin") {
-        navigate("/instructor");
-      } else {
-        navigate("/student");
-      }
-
-    } catch (err) {
-      console.log(err);
-      alert("Server error");
+    if (!res.ok) {
+      alert(data.message || "Login failed");
+      return;
     }
-  };
+
+    // ✅ Store token
+    localStorage.setItem("token", data.token);
+
+    // ✅ Store role (make sure backend sends it)
+    localStorage.setItem("role", data.user.role);
+
+    // ✅ Store userId (VERY IMPORTANT for profile)
+    localStorage.setItem("userId", data.user._id);
+
+    // Role-based navigation
+    if (data.user.role === "admin") {
+      navigate("/instructor");
+    } else {
+      navigate("/student");
+    }
+
+  } catch (err) {
+    console.log(err);
+    alert("Server error");
+  }
+};
 
   return (
     <div className="auth-wrapper">

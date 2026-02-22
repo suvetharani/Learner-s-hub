@@ -256,3 +256,15 @@
     top: 100px;
   }
 }
+.delete {
+  background: #ffe5e5;
+  color: #c40000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background: #ffcccc;
+}

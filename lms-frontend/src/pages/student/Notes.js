@@ -62,6 +62,14 @@ export default function Notes() {
     closeNote();
   };
 
+  const deleteNote = () => {
+  const updated = notes.filter((_, i) => i !== selectedIndex);
+
+  setNotes(updated);
+  localStorage.setItem("notes", JSON.stringify(updated));
+  closeNote();
+};
+
   /* ================= DRAG SUPPORT ================= */
 
   // mouse
@@ -152,14 +160,19 @@ export default function Notes() {
             />
 
             {/* ACTIONS */}
-            <div className="modal-actions">
-              <button className="cancel" onClick={closeNote}>
-                Cancel
-              </button>
-              <button className="save" onClick={saveNote}>
-                Save
-              </button>
-            </div>
+<div className="modal-actions">
+  <button className="cancel" onClick={closeNote}>
+    Cancel
+  </button>
+
+  <button className="delete" onClick={deleteNote}>
+    Delete
+  </button>
+
+  <button className="save" onClick={saveNote}>
+    Save
+  </button>
+</div>
           </div>
         </div>
       )}

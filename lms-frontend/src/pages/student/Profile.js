@@ -1,83 +1,103 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/student/profile.css";
 
 export default function Profile() {
-  const [image, setImage] = useState(null);
-  const [username, setUsername] = useState("Suve");
-  const [email, setEmail] = useState("suve@email.com");
+  const [user, setUser] = useState(null);
+  const userId = localStorage.getItem("userId");
 
-  const [editName, setEditName] = useState(false);
-  const [editEmail, setEditEmail] = useState(false);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const res = await fetch(
+        `http://localhost:5000/api/users/profile/${userId}`
+      );
+      const data = await res.json();
+      setUser(data);
+    };
 
-  const handleImage = (e) => {
-    if (e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
-    }
+    fetchProfile();
+  }, [userId]);
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    await fetch(
+      `http://localhost:5000/api/users/profile/image/${userId}`,
+      {
+        method: "PUT",
+        body: formData
+      }
+    );
+
+    window.location.reload();
   };
+
+  if (!user) return <div>Loading...</div>;
 
   return (
     <div className="profile-page">
       <div className="profile-card">
-        {/* IMAGE */}
+
         <div className="profile-image">
           <img
             src={
-              image ||
-              "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+              user.profileImage
+                ? `http://localhost:5000/uploads/${user.profileImage}`
+                : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
             }
             alt="profile"
           />
         </div>
 
-        {/* FILE INPUT */}
         <label className="upload-btn">
-          Choose Photo
+          Change Photo
           <input type="file" hidden onChange={handleImage} />
         </label>
 
-        {/* USERNAME */}
         <div className="info-row">
-          <span className="label">Username</span>
-
-          {editName ? (
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="edit-input"
-            />
-          ) : (
-            <span className="value">{username}</span>
-          )}
-
-          <button
-            className="edit-btn"
-            onClick={() => setEditName(!editName)}
-          >
-            {editName ? "Save" : "Edit"}
-          </button>
+          <span className="label">Name</span>
+          <span className="value">{user.name}</span>
         </div>
 
-        {/* EMAIL */}
         <div className="info-row">
           <span className="label">Email</span>
-
-          {editEmail ? (
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="edit-input"
-            />
-          ) : (
-            <span className="value">{email}</span>
-          )}
-
-          <button
-            className="edit-btn"
-            onClick={() => setEditEmail(!editEmail)}
-          >
-            {editEmail ? "Save" : "Edit"}
-          </button>
+          <span className="value">{user.email}</span>
         </div>
+
+        {user.role === "student" && (
+          <div className="info-row">
+            <span className="label">Roll Number</span>
+            <span className="value">{user.rollNumber}</span>
+          </div>
+        )}
+
+        {user.role === "admin" && (
+          <>
+            <div className="info-row">
+              <span className="label">Degree</span>
+              <span className="value">{user.degree}</span>
+            </div>
+
+            <div className="info-row">
+              <span className="label">Specialization</span>
+              <span className="value">{user.specialization}</span>
+            </div>
+
+            <div className="info-row">
+              <span className="label">Experience</span>
+              <span className="value">{user.experience} years</span>
+            </div>
+
+            <div className="info-row">
+              <span className="label">Bio</span>
+              <span className="value">{user.bio}</span>
+            </div>
+          </>
+        )}
+
       </div>
     </div>
   );
