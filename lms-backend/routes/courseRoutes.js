@@ -194,8 +194,7 @@ router.get("/student", authMiddleware, async (req, res) => {
 router.get("/:courseId/students", authMiddleware, async (req, res) => {
   try {
     const course = await Course.findById(req.params.courseId)
-      .populate("students", "name email");
-
+.populate("students", "name email profileImage")
     if (!course)
       return res.status(404).json({ message: "Course not found" });
 
@@ -324,6 +323,38 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Course deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ========================================
+// 🔹 REMOVE STUDENT (Instructor)
+// ========================================
+router.put("/:courseId/remove/:studentId", authMiddleware, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId);
+
+    if (!course)
+      return res.status(404).json({ message: "Course not found" });
+
+    const userId = req.user.id || req.user._id;
+
+    // 🔥 Only course owner can remove
+    if (course.instructor.toString() !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
+    const studentId = req.params.studentId;
+
+    // Remove student from enrolled list
+    course.students = course.students.filter(
+      (id) => id.toString() !== studentId
+    );
+
+    await course.save();
+
+    res.json({ message: "Student removed successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
