@@ -281,5 +281,32 @@ router.put("/:courseId/approve-course", authMiddleware, async (req, res) => {
   }
 });
 
+// ========================================
+// 🔹 GET COURSE MATERIALS (Student - Enrolled Only)
+// ========================================
+router.get("/:courseId/materials", authMiddleware, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId);
+
+    if (!course)
+      return res.status(404).json({ message: "Course not found" });
+
+    const userId = req.user.id;
+
+    // 🔥 Allow only enrolled students
+    const isEnrolled = course.students.some(
+      (student) => student.toString() === userId
+    );
+
+    if (!isEnrolled) {
+      return res.status(403).json({ message: "Access denied. Not enrolled." });
+    }
+
+    res.json(course.materials);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 module.exports = router;
