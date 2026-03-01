@@ -1,32 +1,34 @@
 import { useEffect, useState } from "react";
 import "../../styles/student/classroom.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Classroom() {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCourses();
   }, []);
 
-const fetchCourses = async () => {
-  try {
-    const res = await fetch("http://localhost:5000/api/courses/student", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const fetchCourses = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/courses/student", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      setCourses(data);
+      if (res.ok) {
+        setCourses(data);
+      }
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
-};
+  };
 
   const requestToJoin = async (courseId) => {
     try {
@@ -44,7 +46,7 @@ const fetchCourses = async () => {
 
       if (res.ok) {
         alert("Request sent successfully!");
-        fetchCourses(); // 🔥 refresh status
+        fetchCourses(); // refresh
         setSelectedCourse(null);
       } else {
         alert(data.message);
@@ -68,7 +70,7 @@ const fetchCourses = async () => {
             <h3>{course.name}</h3>
             <p>Instructor: {course.instructor?.name}</p>
 
-            {/* 🔥 STATUS BADGE */}
+            {/* STATUS BADGE */}
             {course.isEnrolled && (
               <span className="badge enrolled">Enrolled</span>
             )}
@@ -80,7 +82,7 @@ const fetchCourses = async () => {
         ))}
       </div>
 
-      {/* 🔥 POPUP */}
+      {/* POPUP */}
       {selectedCourse && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -89,23 +91,23 @@ const fetchCourses = async () => {
 
             <div className="modal-buttons">
 
-              {/* 🔥 ENROLLED */}
+              {/* ENROLLED */}
               {selectedCourse.isEnrolled ? (
                 <button
                   className="btn-enroll"
                   onClick={() =>
-                    window.location.href = `/student/course/${selectedCourse._id}`
+                    navigate(`/student/course/${selectedCourse._id}`)
                   }
                 >
                   Open Course
                 </button>
               ) : selectedCourse.isRequested ? (
-                /* 🔥 REQUESTED */
+                /* REQUESTED */
                 <button className="btn-disabled" disabled>
                   Pending Approval
                 </button>
               ) : (
-                /* 🔥 NOT REQUESTED */
+                /* NOT REQUESTED */
                 <button
                   className="btn-enroll"
                   onClick={() => requestToJoin(selectedCourse._id)}
@@ -120,6 +122,7 @@ const fetchCourses = async () => {
               >
                 Cancel
               </button>
+
             </div>
           </div>
         </div>

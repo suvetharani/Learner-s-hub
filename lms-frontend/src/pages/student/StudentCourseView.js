@@ -11,18 +11,9 @@ export default function StudentCourseView() {
   }, []);
 
   const fetchMaterials = async () => {
-    const res = await fetch(
-      `http://localhost:5000/api/courses/${id}/students`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (res.ok) {
-      const courseRes = await fetch(
-        `http://localhost:5000/api/courses/instructor`,
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/courses/${id}/materials`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -30,12 +21,15 @@ export default function StudentCourseView() {
         }
       );
 
-      const courses = await courseRes.json();
-      const current = courses.find((c) => c._id === id);
+      const data = await res.json();
 
-      if (current) {
-        setMaterials(current.materials || []);
+      if (res.ok) {
+        setMaterials(data);
+      } else {
+        alert(data.message);
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -46,19 +40,28 @@ export default function StudentCourseView() {
       {materials.length === 0 ? (
         <p>No materials uploaded yet</p>
       ) : (
-        materials.map((file, index) => (
-          <div key={index} className="material-card">
-            <h4>{file.fileName}</h4>
+        <div className="materials-grid">
+          {materials.map((file, index) => (
+            <div key={index} className="material-card">
+              <h4>{file.fileName}</h4>
 
-            <a
-              href={`http://localhost:5000/${file.fileUrl}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View
-            </a>
-          </div>
-        ))
+              <a
+                href={`http://localhost:5000/${file.fileUrl}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View
+              </a>
+
+              <a
+                href={`http://localhost:5000/${file.fileUrl}`}
+                download
+              >
+                Download
+              </a>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

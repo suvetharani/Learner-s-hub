@@ -20,6 +20,8 @@ import Ranking from "./Ranking";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 
+import StudentCourseView from "./StudentCourseView";
+
 
 import "../../styles/student/student.css";
 
@@ -68,6 +70,7 @@ function StudentHome() {
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<Profile />} />
 
+          <Route path="course/:id" element={<StudentCourseView />} />
         </Routes>
       </div>
     </div>
