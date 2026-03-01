@@ -4,7 +4,8 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes"); // ✅ use this only
+const userRoutes = require("./routes/userRoutes");
+const courseRoutes = require("./routes/courseRoutes");
 
 const app = express();
 
@@ -16,7 +17,8 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.log(err));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes); // ✅ only once
+app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes);
 app.use("/uploads", express.static("uploads"));
 
 app.listen(5000, () => {
