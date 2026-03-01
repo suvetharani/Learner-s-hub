@@ -107,6 +107,24 @@ export default function CourseDetails() {
 
   fetchMaterials(); // Refresh list
 };
+// 🔹 Remove Student
+const removeStudent = async (studentId) => {
+  const confirmRemove = window.confirm(
+    "Are you sure you want to remove this student?"
+  );
+
+  if (!confirmRemove) return;
+
+  await fetch(
+    `http://localhost:5000/api/courses/${id}/remove/${studentId}`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  fetchStudents(); // refresh students list
+};
 
   return (
     <div className="classroom-page">
@@ -159,12 +177,32 @@ export default function CourseDetails() {
       <p className="empty-text">No students enrolled</p>
     ) : (
       students.map((stu) => (
-        <div key={stu._id} className="student-card">
-          <div className="avatar">
-            {stu.name.charAt(0).toUpperCase()}
-          </div>
-          <span>{stu.name}</span>
-        </div>
+<div key={stu._id} className="student-card">
+
+  {/* 🔥 PROFILE IMAGE OR FALLBACK */}
+  {stu.profileImage ? (
+    <img
+      src={`http://localhost:5000/${stu.profileImage}`}
+      alt={stu.name}
+      className="profile-img"
+    />
+  ) : (
+    <div className="avatar">
+      {stu.name.charAt(0).toUpperCase()}
+    </div>
+  )}
+
+  <span>{stu.name}</span>
+
+  {/* 🔥 REMOVE BUTTON */}
+  <button
+    className="remove-btn"
+    onClick={() => removeStudent(stu._id)}
+  >
+    Remove
+  </button>
+
+</div>
       ))
     )}
   </div>
