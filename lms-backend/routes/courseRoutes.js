@@ -308,5 +308,23 @@ router.get("/:courseId/materials", authMiddleware, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course)
+      return res.status(404).json({ message: "Course not found" });
+
+    // 🔥 Check owner
+    if (course.instructor.toString() !== req.user.id)
+      return res.status(403).json({ message: "Not authorized" });
+
+    await course.deleteOne();
+
+    res.json({ message: "Course deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;
