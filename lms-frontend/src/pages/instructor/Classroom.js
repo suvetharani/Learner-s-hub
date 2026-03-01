@@ -9,12 +9,12 @@ export default function Classroom() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // 🔥 Decode user directly from token
+  // Decode user from token
   const getUserFromToken = () => {
     if (!token) return null;
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload; // contains id or _id depending on your JWT
+      return payload;
     } catch (err) {
       return null;
     }
@@ -40,6 +40,42 @@ export default function Classroom() {
     }
   };
 
+  // 🔥 DELETE COURSE FUNCTION
+  const deleteCourse = async (courseId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this course?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/courses/${courseId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Course deleted successfully!");
+
+        // 🔥 Remove from UI without refresh
+        setCourses((prev) =>
+          prev.filter((course) => course._id !== courseId)
+        );
+      } else {
+        alert(data.message || "Failed to delete course");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (loading) return <p>Loading courses...</p>;
 
   return (
@@ -53,28 +89,38 @@ export default function Classroom() {
             course.instructor?._id === currentUser?._id;
 
           return (
-            <div
-              key={course._id}
-              className="course-card"
-              onClick={() =>
-                navigate(`/instructor/course/${course._id}`, {
-                  state: { isOwner },
-                })
-              }
-            >
-              <h3>{course.name}</h3>
+            <div key={course._id} className="course-card">
+              {/* 🔥 OPEN COURSE */}
+              <div
+                onClick={() =>
+                  navigate(`/instructor/course/${course._id}`, {
+                    state: { isOwner },
+                  })
+                }
+              >
+                <h3>{course.name}</h3>
+                <p className="course-author">
+                  Author: {course.instructor?.name}
+                </p>
 
-              <p className="course-author">
-                Author: {course.instructor?.name}
-              </p>
+                {isOwner ? (
+                  <span className="badge-own">Your Course</span>
+                ) : (
+                  <span className="badge-view">View Only</span>
+                )}
 
-              {isOwner ? (
-                <span className="badge-own">Your Course</span>
-              ) : (
-                <span className="badge-view">View Only</span>
+                <p className="open-text">Click to open</p>
+              </div>
+
+              {/* 🔥 DELETE BUTTON (ONLY OWNER) */}
+              {isOwner && (
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteCourse(course._id)}
+                >
+                  Delete Course
+                </button>
               )}
-
-              <p className="open-text">Click to open</p>
             </div>
           );
         })}
