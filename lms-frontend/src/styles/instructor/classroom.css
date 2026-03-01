@@ -1,0 +1,326 @@
+/* ================= PAGE ================= */
+.classroom-page {
+  padding: 30px;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ================= TITLE ================= */
+.classroom-page h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* ================= CREATE COURSE ================= */
+.create-course {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.create-course input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.create-course input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  outline: none;
+}
+
+.create-course button {
+  padding: 12px 20px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.create-course button:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+/* ================= COURSE GRID ================= */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
+}
+
+/* ================= COURSE CARD ================= */
+.course-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.course-card h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #1e293b;
+}
+
+.course-author {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+.open-text {
+  font-size: 12px;
+  color: #4f46e5;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* 🔒 Locked Course */
+.locked-card {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.locked-card:hover {
+  transform: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* 🟢 Badge */
+.badge-own,
+.badge-locked,
+.badge-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 20px;
+  color: white;
+}
+
+.badge-own {
+  background: #16a34a;
+}
+
+.badge-locked {
+  background: #6b7280;
+}
+
+.badge-status.pending {
+  background: #f59e0b;
+}
+
+.badge-status.approved {
+  background: #2563eb;
+}
+
+/* ================= COURSE MANAGEMENT ================= */
+.course-management {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  margin-top: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.course-management h3 {
+  margin: 25px 0 15px;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+/* ================= TAB MENU ================= */
+.tab-menu {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-menu button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #e2e8f0;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.tab-menu button:hover {
+  background: #cbd5e1;
+}
+
+.tab-content {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* ================= JOIN REQUESTS ================= */
+.request-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.approve-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.approve-btn:hover {
+  background: #15803d;
+  transform: scale(1.05);
+}
+
+/* ================= STUDENTS ================= */
+.student-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= MATERIALS ================= */
+.materials-section {
+  margin-top: 10px;
+}
+
+.upload-box {
+  background: #f1f5f9;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  border: 1px dashed #cbd5e1;
+}
+
+.upload-box input {
+  margin-top: 10px;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.material-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.material-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+}
+
+.file-icon {
+  font-size: 34px;
+}
+
+.file-details h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.file-details p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 5px 0 10px 0;
+}
+
+.material-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.material-actions a {
+  text-decoration: none;
+  font-size: 13px;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.material-actions a:hover {
+  text-decoration: underline;
+}
+
+/* ================= EMPTY TEXT ================= */
+.empty-text {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .create-course {
+    flex-direction: column;
+  }
+
+  .course-grid,
+  .materials-grid {
+    grid-template-columns: 1fr;
+  }
+}

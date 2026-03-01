@@ -27,6 +27,7 @@ import Ranking from "./Ranking";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import StudentProfile from "./StudentProfile";
+import CourseDetails from "./CourseDetails";
 
 /* ✅ NEW BOXES */
 import StudentsPreview from "../../components/instructor/StudentsPreview";
@@ -78,6 +79,7 @@ function InstructorHome() {
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<Profile />} />
           <Route path="students/:id" element={<StudentProfile />} />
+          <Route path="course/:id" element={<CourseDetails />} />
         </Routes>
       </div>
     </div>
