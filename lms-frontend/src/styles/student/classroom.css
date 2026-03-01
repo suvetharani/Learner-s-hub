@@ -54,3 +54,48 @@
     grid-template-columns: 1fr;
   }
 }
+/* Modal Background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Box */
+.modal-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+/* Buttons */
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-enroll {
+  background: green;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: red;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+}
