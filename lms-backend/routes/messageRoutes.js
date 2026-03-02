@@ -1,9 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const Message = require("../models/Message");
+const multer = require("multer");
 
-// Send Message
-router.post("/send", async (req, res) => {
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+/* SEND MESSAGE */
+router.post("/send", upload.single("image"), async (req, res) => {
   try {
     const { senderId, receiverId, text } = req.body;
 
@@ -11,6 +21,7 @@ router.post("/send", async (req, res) => {
       sender: senderId,
       receiver: receiverId,
       text,
+      image: req.file ? "uploads/" + req.file.filename : null,
     });
 
     await message.save();
@@ -20,40 +31,24 @@ router.post("/send", async (req, res) => {
   }
 });
 
-// Get conversation between 2 users
+/* GET CONVERSATION */
 router.get("/:user1/:user2", async (req, res) => {
-  try {
-    const { user1, user2 } = req.params;
+  const { user1, user2 } = req.params;
 
-    const messages = await Message.find({
-      $or: [
-        { sender: user1, receiver: user2 },
-        { sender: user2, receiver: user1 },
-      ],
-    }).sort({ createdAt: 1 });
+  const messages = await Message.find({
+    $or: [
+      { sender: user1, receiver: user2 },
+      { sender: user2, receiver: user1 },
+    ],
+  }).sort({ createdAt: 1 });
 
-    res.json(messages);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  res.json(messages);
 });
 
-// Delete conversation
-router.delete("/delete/:user1/:user2", async (req, res) => {
-  try {
-    const { user1, user2 } = req.params;
-
-    await Message.deleteMany({
-      $or: [
-        { sender: user1, receiver: user2 },
-        { sender: user2, receiver: user1 },
-      ],
-    });
-
-    res.json({ message: "Chat deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+/* DELETE SINGLE MESSAGE */
+router.delete("/:id", async (req, res) => {
+  await Message.findByIdAndDelete(req.params.id);
+  res.json({ message: "Message deleted" });
 });
 
 module.exports = router;
