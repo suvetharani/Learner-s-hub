@@ -1,3 +1,5 @@
-export default function Messages() {
-  return <div>Your chats and announcements.</div>;
+import Messages from '../../components/Messages';
+
+export default function StudentMessages() {
+  return <Messages />;
 }

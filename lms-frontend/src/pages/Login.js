@@ -57,6 +57,7 @@ const submit = async () => {
     // ✅ Store userId (VERY IMPORTANT for profile)
     localStorage.setItem("userId", data.user._id);
 
+    localStorage.setItem("user", JSON.stringify(data.user));
     // Role-based navigation
     if (data.user.role === "admin") {
       navigate("/instructor");
