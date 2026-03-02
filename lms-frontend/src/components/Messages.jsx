@@ -1,19 +1,43 @@
-import { useState, useEffect } from "react";
-import { FaTrash, FaSmile } from "react-icons/fa";
-import EmojiPicker from "emoji-picker-react";
+import { useState, useEffect, useRef } from "react";
+import { FaTrash, FaPlus } from "react-icons/fa";
+import { io } from "socket.io-client";
 import "./messages.css";
+
+const socket = io("http://localhost:5000");
 
 export default function Messages() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [showEmoji, setShowEmoji] = useState(false);
+  const [image, setImage] = useState(null);
 
-  const token = localStorage.getItem("token");
   const currentUser = JSON.parse(localStorage.getItem("user"));
+  const fileInputRef = useRef();
 
-  // ================= FETCH USERS =================
+  /* ================= SOCKET CONNECTION ================= */
+  useEffect(() => {
+    if (!currentUser?._id) return;
+
+    socket.emit("addUser", currentUser._id);
+
+    socket.on("receiveMessage", (data) => {
+      // Only receive message if chat is open and not sender
+      if (
+        selectedUser &&
+        data.sender !== currentUser._id &&
+        data.sender === selectedUser._id
+      ) {
+        setMessages((prev) => [...prev, data]);
+      }
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [selectedUser, currentUser]);
+
+  /* ================= FETCH USERS ================= */
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -22,97 +46,107 @@ export default function Messages() {
     const res = await fetch("http://localhost:5000/api/users/all");
     const data = await res.json();
 
-    // remove current user from list
-    const filtered = data.filter(
-      (user) => user._id !== currentUser?._id
+    setUsers(
+      data.filter((u) => u._id !== currentUser._id)
     );
-
-    setUsers(filtered);
   };
 
-  // ================= FETCH MESSAGES =================
-  useEffect(() => {
-    if (selectedUser && currentUser) {
-      fetchMessages();
-    }
-  }, [selectedUser]);
-
+  /* ================= FETCH MESSAGES ================= */
   const fetchMessages = async () => {
-    if (!selectedUser || !currentUser) return;
+    if (!selectedUser) return;
 
     const res = await fetch(
       `http://localhost:5000/api/messages/${currentUser._id}/${selectedUser._id}`
     );
-
     const data = await res.json();
     setMessages(data);
   };
 
-  // ================= SEND MESSAGE =================
+  useEffect(() => {
+    if (selectedUser) fetchMessages();
+  }, [selectedUser]);
+
+  /* ================= SEND MESSAGE ================= */
   const sendMessage = async () => {
-    if (!message.trim() || !selectedUser || !currentUser) return;
+    if (!message.trim() && !image) return;
+
+    const formData = new FormData();
+    formData.append("senderId", currentUser._id);
+    formData.append("receiverId", selectedUser._id);
+    formData.append("text", message);
+    if (image) formData.append("image", image);
 
     const res = await fetch("http://localhost:5000/api/messages/send", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        senderId: currentUser._id,
-        receiverId: selectedUser._id,
-        text: message,
-      }),
+      body: formData,
     });
 
     const data = await res.json();
-    setMessages([...messages, data]);
+
+    // Add message only once (sender side)
+    setMessages((prev) => [...prev, data]);
+
+    socket.emit("sendMessage", {
+      senderId: currentUser._id,
+      receiverId: selectedUser._id,
+      message: data,
+    });
+
     setMessage("");
-    setShowEmoji(false);
+    setImage(null);
   };
 
-  // ================= DELETE CHAT =================
-  const deleteChat = async () => {
-    if (!selectedUser) return;
+  /* ================= DELETE SINGLE MESSAGE ================= */
+  const deleteMessage = async (id) => {
+    await fetch(`http://localhost:5000/api/messages/${id}`, {
+      method: "DELETE",
+    });
 
-    const confirmDelete = window.confirm("Delete this chat?");
-    if (!confirmDelete) return;
-
-    await fetch(
-      `http://localhost:5000/api/messages/delete/${currentUser._id}/${selectedUser._id}`,
-      { method: "DELETE" }
+    setMessages((prev) =>
+      prev.filter((msg) => msg._id !== id)
     );
-
-    setMessages([]);
-  };
-
-  // ================= EMOJI SELECT =================
-  const onEmojiClick = (emojiData) => {
-    setMessage((prev) => prev + emojiData.emoji);
   };
 
   return (
     <div className="messages-container">
-      {/* SIDEBAR */}
+      {/* ================= SIDEBAR ================= */}
       <div className="chat-sidebar">
         <h3>Messages</h3>
 
         {users.map((user) => (
           <div
             key={user._id}
-            className={`chat-user ${
-              selectedUser?._id === user._id ? "active" : ""
-            }`}
+            className="chat-user"
             onClick={() => setSelectedUser(user)}
           >
-            {user.name}
+            <img
+              src={
+                user.profileImage
+                  ? `http://localhost:5000/${user.profileImage}`
+                  : "https://via.placeholder.com/40"
+              }
+              alt=""
+              className="profile-img"
+            />
+            <span>{user.name}</span>
           </div>
         ))}
       </div>
 
-      {/* CHAT SECTION */}
+      {/* ================= CHAT SECTION ================= */}
       {selectedUser && (
         <div className="chat-section">
           <div className="chat-header">
+            <img
+              src={
+                selectedUser.profileImage
+                  ? `http://localhost:5000/${selectedUser.profileImage}`
+                  : "https://via.placeholder.com/40"
+              }
+              alt=""
+              className="profile-img"
+            />
             <h4>{selectedUser.name}</h4>
-            <FaTrash className="delete-icon" onClick={deleteChat} />
           </div>
 
           <div className="chat-body">
@@ -125,32 +159,57 @@ export default function Messages() {
                     : "message received"
                 }
               >
-                {msg.text}
+                {msg.text && <p>{msg.text}</p>}
+
+                {msg.image && (
+                  <img
+                    src={`http://localhost:5000/${msg.image}`}
+                    alt=""
+                    className="chat-image"
+                  />
+                )}
+
+                <FaTrash
+                  className="delete-icon"
+                  onClick={() => deleteMessage(msg._id)}
+                />
               </div>
             ))}
           </div>
 
+          {/* ================= INPUT SECTION ================= */}
           <div className="chat-input">
-            <FaSmile
-              className="emoji-icon"
-              onClick={() => setShowEmoji(!showEmoji)}
+            <FaPlus
+              className="plus-icon"
+              onClick={() => fileInputRef.current.click()}
             />
 
-            {showEmoji && (
-              <div className="emoji-picker">
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
+            <input
+              type="file"
+              hidden
+              ref={fileInputRef}
+              onChange={(e) => setImage(e.target.files[0])}
+            />
 
             <input
-              type="text"
-              placeholder="Type a message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type a message..."
             />
 
             <button onClick={sendMessage}>Send</button>
           </div>
+
+          {/* IMAGE PREVIEW BEFORE SEND */}
+          {image && (
+            <div className="image-preview">
+              <img
+                src={URL.createObjectURL(image)}
+                alt="preview"
+                className="chat-image"
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
