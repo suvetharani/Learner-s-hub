@@ -1,24 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "../../styles/student/notes.css";
 
-const initialNotes = [
-  {
-    title: "Introduction to AI",
-    content:
-      "Artificial Intelligence is the simulation of human intelligence by machines.",
-  },
-  {
-    title: "Data Structures Basics",
-    content:
-      "Data structures help organize data efficiently like arrays, stacks, and queues.",
-  },
-  {
-    title: "Computer Networks",
-    content:
-      "A computer network allows systems to share information and resources.",
-  },
-];
-
 export default function Notes() {
   const [notes, setNotes] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -30,49 +12,118 @@ export default function Notes() {
   const dragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
 
-  // LOAD NOTES (sidebar + defaults)
+  /* ================= LOAD NOTES FROM BACKEND ================= */
+
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("notes"));
-    if (stored && stored.length > 0) setNotes(stored);
-    else setNotes(initialNotes);
+    fetchNotes();
   }, []);
 
-  // OPEN
+  const fetchNotes = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/notes", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const data = await res.json();
+      setNotes(data);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
+  /* ================= CREATE NEW NOTE ================= */
+
+  const createNote = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: "New Note",
+          content: "",
+        }),
+      });
+
+      const newNote = await res.json();
+      setNotes([...notes, newNote]);
+    } catch (error) {
+      console.error("Error creating note:", error);
+    }
+  };
+
+  /* ================= OPEN / CLOSE ================= */
+
   const openNote = (index) => {
     setSelectedIndex(index);
     setEditedTitle(notes[index].title);
     setEditedContent(notes[index].content);
   };
 
-  // CLOSE
   const closeNote = () => {
     setSelectedIndex(null);
   };
 
-  // SAVE
-  const saveNote = () => {
-    const updated = [...notes];
-    updated[selectedIndex] = {
-      title: editedTitle,
-      content: editedContent,
-    };
+  /* ================= SAVE NOTE ================= */
 
-    setNotes(updated);
-    localStorage.setItem("notes", JSON.stringify(updated));
-    closeNote();
+  const saveNote = async () => {
+    try {
+      const noteId = notes[selectedIndex]._id;
+
+      const res = await fetch(
+        `http://localhost:5000/api/notes/${noteId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: editedTitle,
+            content: editedContent,
+          }),
+        }
+      );
+
+      const updatedNote = await res.json();
+
+      const updated = [...notes];
+      updated[selectedIndex] = updatedNote;
+
+      setNotes(updated);
+      closeNote();
+    } catch (error) {
+      console.error("Error saving note:", error);
+    }
   };
 
-  const deleteNote = () => {
-  const updated = notes.filter((_, i) => i !== selectedIndex);
+  /* ================= DELETE NOTE ================= */
 
-  setNotes(updated);
-  localStorage.setItem("notes", JSON.stringify(updated));
-  closeNote();
-};
+  const deleteNote = async () => {
+    try {
+      const noteId = notes[selectedIndex]._id;
+
+      await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const updated = notes.filter((_, i) => i !== selectedIndex);
+      setNotes(updated);
+      closeNote();
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
+  };
 
   /* ================= DRAG SUPPORT ================= */
 
-  // mouse
   const handleMouseDown = (e) => {
     dragging.current = true;
     offset.current = {
@@ -91,7 +142,6 @@ export default function Notes() {
     dragging.current = false;
   };
 
-  // touch (mobile)
   const handleTouchStart = (e) => {
     dragging.current = true;
     const touch = e.touches[0];
@@ -112,12 +162,19 @@ export default function Notes() {
     dragging.current = false;
   };
 
+  /* ================= UI ================= */
+
   return (
     <div className="notes-page">
+      {/* CREATE BUTTON */}
+      <div style={{ marginBottom: "15px" }}>
+        <button onClick={createNote}>+ Create Note</button>
+      </div>
+
       {/* GRID */}
       <div className="notes-grid">
         {notes.map((note, i) => (
-          <div key={i} className="note-card" onClick={() => openNote(i)}>
+          <div key={note._id} className="note-card" onClick={() => openNote(i)}>
             <h4>{note.title}</h4>
             <p>Click to view / edit</p>
           </div>
@@ -136,7 +193,6 @@ export default function Notes() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {/* DRAG HEADER */}
             <div
               className="drag-header"
               onMouseDown={handleMouseDown}
@@ -145,34 +201,31 @@ export default function Notes() {
               Drag
             </div>
 
-            {/* TITLE */}
             <input
               className="note-title-input"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
             />
 
-            {/* CONTENT */}
             <textarea
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
               className="note-textarea"
             />
 
-            {/* ACTIONS */}
-<div className="modal-actions">
-  <button className="cancel" onClick={closeNote}>
-    Cancel
-  </button>
+            <div className="modal-actions">
+              <button className="cancel" onClick={closeNote}>
+                Cancel
+              </button>
 
-  <button className="delete" onClick={deleteNote}>
-    Delete
-  </button>
+              <button className="delete" onClick={deleteNote}>
+                Delete
+              </button>
 
-  <button className="save" onClick={saveNote}>
-    Save
-  </button>
-</div>
+              <button className="save" onClick={saveNote}>
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -37,21 +37,28 @@ function Sidebar({ isOpen, setIsOpen }) {
   const isDragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
 
-  /* ================= SAVE NOTE ================= */
-  const handleSave = () => {
-    const oldNotes = JSON.parse(localStorage.getItem("notes")) || [];
+  /* ================= SAVE NOTE TO BACKEND ================= */
+  const handleSave = async () => {
+    try {
+      await fetch("http://localhost:5000/api/notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: title || "New Note",
+          content: content || "",
+        }),
+      });
 
-    oldNotes.push({
-      id: Date.now(),
-      title,
-      content,
-    });
+      setTitle("");
+      setContent("");
+      setShowPopup(false);
 
-    localStorage.setItem("notes", JSON.stringify(oldNotes));
-
-    setTitle("");
-    setContent("");
-    setShowPopup(false);
+    } catch (error) {
+      console.error("Error saving note:", error);
+    }
   };
 
   /* ================= DRAG ================= */
@@ -101,7 +108,6 @@ function Sidebar({ isOpen, setIsOpen }) {
               <span>{item.label}</span>
             </div>
 
-            {/* PLUS BUTTON */}
             {item.hasAdd && (
               <FaPlus
                 className="add-icon"
