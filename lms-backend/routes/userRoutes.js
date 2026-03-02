@@ -66,4 +66,13 @@ router.put("/profile/image/:id", upload.single("image"), async (req, res) => {
   }
 });
 
+// GET all users for messages
+router.get("/all", async (req, res) => {
+  try {
+    const users = await User.find().select("name email role status");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
