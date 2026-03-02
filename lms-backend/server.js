@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const noteRoutes = require("./routes/noteRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -24,6 +25,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/notes", noteRoutes);
 app.use("/uploads", express.static("uploads"));
 
 /* ================= SOCKET ================= */
