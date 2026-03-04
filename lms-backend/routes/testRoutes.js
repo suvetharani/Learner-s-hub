@@ -32,6 +32,13 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+router.delete("/:id", async (req, res) => {
+  try {
+    await Test.findByIdAndDelete(req.params.id);
+    res.json({ message: "Test deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete test" });
+  }
+});
 
 module.exports = router;
