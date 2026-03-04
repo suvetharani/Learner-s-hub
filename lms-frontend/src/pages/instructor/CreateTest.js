@@ -258,7 +258,7 @@ export default function CreateTest() {
           {!isViewMode && (
             <>
               <button className="finish-btn" onClick={handleSave}>
-                Finish Test
+                Finish Test Questions
               </button>
 
               <button className="floating-add" onClick={addQuestion}>

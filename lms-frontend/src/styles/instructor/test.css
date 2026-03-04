@@ -255,3 +255,14 @@ select {
 .saved-card h4 {
   margin-bottom: 8px;
 }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: red;
+}

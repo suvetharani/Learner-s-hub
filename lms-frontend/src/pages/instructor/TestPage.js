@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 import "../../styles/instructor/test.css";
 
 export default function TestPage() {
   const navigate = useNavigate();
   const [tests, setTests] = useState([]);
 
-  // ✅ Fetch tests from backend
+  // ✅ Fetch tests
   useEffect(() => {
     const fetchTests = async () => {
       try {
@@ -28,6 +29,34 @@ export default function TestPage() {
     fetchTests();
   }, []);
 
+  // ✅ Delete test
+  const handleDelete = async (e, testId) => {
+    e.stopPropagation(); // 🚀 prevents card click
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this test?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/tests/${testId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete test");
+      }
+
+      // Remove from UI instantly
+      setTests((prev) => prev.filter((test) => test._id !== testId));
+    } catch (error) {
+      console.error("Error deleting test:", error);
+    }
+  };
+
   return (
     <div className="test-container">
       <h2>Tests</h2>
@@ -47,7 +76,7 @@ export default function TestPage() {
         </div>
       </div>
 
-      {/* Backend Tests */}
+      {/* Saved Tests */}
       {tests.length > 0 && (
         <>
           <h3 style={{ marginTop: "50px" }}>Recent Tests</h3>
@@ -61,7 +90,16 @@ export default function TestPage() {
                   navigate(`/instructor/create-test/${test._id}`)
                 }
               >
-                <h4>{test.title}</h4>
+                <div className="card-header">
+                  <h4>{test.title}</h4>
+
+                  <Trash2
+                    size={18}
+                    className="delete-icon"
+                    onClick={(e) => handleDelete(e, test._id)}
+                  />
+                </div>
+
                 <p>
                   {new Date(test.createdAt).toLocaleString()}
                 </p>
