@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const noteRoutes = require("./routes/noteRoutes");
+const testRoutes = require("./routes/testRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/tests", testRoutes);
 app.use("/uploads", express.static("uploads"));
 
 /* ================= SOCKET ================= */
