@@ -19,7 +19,7 @@ const items = [
   { name: "instructors", label: "Instructors", icon: <FaChalkboardTeacher /> },
   { name: "classroom", label: "Classroom", icon: <FaDoorOpen /> },
   { name: "course-creation", label: "Course Creation", icon: <FaClipboardList /> },
-  { name: "test-creation", label: "Test Creation", icon: <FaClipboardList /> },
+  { name: "test", label: "Test Creation", icon: <FaClipboardList /> },
   { name: "messages", label: "Messages", icon: <FaEnvelope /> },
   { name: "notes", label: "Notes", icon: <FaStickyNote />, hasAdd: true },
   { name: "ranking", label: "Ranking", icon: <FaTrophy /> },

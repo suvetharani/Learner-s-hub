@@ -20,7 +20,6 @@ import Academics from "./Academics";
 import Instructors from "./Instructors";
 import Classroom from "./Classroom";
 import CourseCreation from "./CourseCreation";
-import TestCreation from "./TestCreation";
 import MessagePage from "./Messages";
 import Notes from "./Notes";
 import Ranking from "./Ranking";
@@ -28,6 +27,8 @@ import Notifications from "./Notifications";
 import Profile from "./Profile";
 import StudentProfile from "./StudentProfile";
 import CourseDetails from "./CourseDetails";
+import TestPage from "./TestPage";
+import CreateTest from "./CreateTest";
 
 /* ✅ NEW BOXES */
 import StudentsPreview from "../../components/instructor/StudentsPreview";
@@ -72,7 +73,6 @@ function InstructorHome() {
           <Route path="instructors" element={<Instructors />} />
           <Route path="classroom" element={<Classroom />} />
           <Route path="course-creation" element={<CourseCreation />} />
-          <Route path="test-creation" element={<TestCreation />} />
           <Route path="messages" element={<MessagePage />} />
           <Route path="notes" element={<Notes />} />
           <Route path="ranking" element={<Ranking />} />
@@ -80,6 +80,9 @@ function InstructorHome() {
           <Route path="profile" element={<Profile />} />
           <Route path="students/:id" element={<StudentProfile />} />
           <Route path="course/:id" element={<CourseDetails />} />
+          <Route path="test" element={<TestPage />} />
+<Route path="create-test" element={<CreateTest />} />
+<Route path="create-test/:id" element={<CreateTest />} />
         </Routes>
       </div>
     </div>

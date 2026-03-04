@@ -3,9 +3,8 @@ import { FaTrash, FaPlus } from "react-icons/fa";
 import { io } from "socket.io-client";
 import "./messages.css";
 
-const socket = io("http://localhost:5000");
-
 export default function Messages() {
+  const socket = useRef(null);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -19,13 +18,13 @@ export default function Messages() {
   useEffect(() => {
     if (!currentUser?._id) return;
 
-    socket.emit("addUser", currentUser._id);
+    socket.current = io("http://localhost:5000");
 
-    socket.on("receiveMessage", (data) => {
-      // Only receive message if chat is open and not sender
+    socket.current.emit("addUser", currentUser._id);
+
+    socket.current.on("receiveMessage", (data) => {
       if (
         selectedUser &&
-        data.sender !== currentUser._id &&
         data.sender === selectedUser._id
       ) {
         setMessages((prev) => [...prev, data]);
@@ -33,9 +32,9 @@ export default function Messages() {
     });
 
     return () => {
-      socket.off("receiveMessage");
+      socket.current.disconnect();
     };
-  }, [selectedUser, currentUser]);
+  }, [currentUser]);
 
   /* ================= FETCH USERS ================= */
   useEffect(() => {

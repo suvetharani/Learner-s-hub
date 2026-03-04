@@ -1,0 +1,257 @@
+/* ============ GLOBAL BACKGROUND ============ */
+body {
+  background-color: #FBFBFB;
+}
+
+/* ============ TEST PAGE ============ */
+.test-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.test-container h2 {
+  text-align: center;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Grid */
+.test-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.card {
+  padding: 45px 20px;
+  border-radius: 16px;
+  background: #E8F9FF;
+  border: 1px solid #C4D9FF;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  background: #C4D9FF;
+}
+
+.create-card {
+  background: #C5BAFF;
+  color: #222;
+}
+
+/* ============ BUILDER PAGE ============ */
+
+.builder-container {
+  padding: 40px 20px 120px;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Header */
+.form-header {
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  margin-bottom: 30px;
+  border: 2px solid #C4D9FF;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 600;
+  border: none;
+  width: 100%;
+  margin-bottom: 10px;
+  background: transparent;
+}
+
+.form-description {
+  border: none;
+  width: 100%;
+  background: transparent;
+  color: #777;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  position: relative;
+}
+
+.tabs .active {
+  color: #000;
+  font-weight: 600;
+}
+
+.tabs .active::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #C5BAFF;
+  border-radius: 10px;
+}
+
+/* Question Card */
+.question-card {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  margin-bottom: 25px;
+  border: 2px solid #E8F9FF;
+  transition: 0.3s ease;
+}
+
+.question-card:hover {
+  border-color: #C4D9FF;
+}
+
+.question-top {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.question-input {
+  flex: 1;
+  border: none;
+  border-bottom: 2px solid #ddd;
+  font-size: 18px;
+  padding: 5px;
+  background: transparent;
+}
+
+.question-input:focus {
+  outline: none;
+  border-color: #C5BAFF;
+}
+
+/* Dropdown */
+select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #C4D9FF;
+  background: #E8F9FF;
+  cursor: pointer;
+}
+
+/* Preview Fields */
+.preview-input {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+/* Options */
+.option-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Bottom Row */
+.question-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Toggle */
+.question-bottom input[type="checkbox"] {
+  accent-color: #C5BAFF;
+}
+
+/* Floating Add */
+.floating-add {
+  position: fixed;
+  right: 35px;
+  bottom: 35px;
+  background: #C5BAFF;
+  color: #000;
+  border: none;
+  padding: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transition: 0.3s ease;
+}
+
+.floating-add:hover {
+  transform: scale(1.1);
+}
+
+/* Finish Button */
+.finish-btn {
+  margin-top: 40px;
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  background: #C4D9FF;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.finish-btn:hover {
+  background: #C5BAFF;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .builder-container {
+    padding: 20px 15px 120px;
+  }
+
+  .question-top {
+    flex-direction: column;
+  }
+}
+
+.saved-tests {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.saved-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  border: 2px solid #E8F9FF;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.saved-card:hover {
+  border-color: #C5BAFF;
+  transform: translateY(-4px);
+}
+
+.saved-card h4 {
+  margin-bottom: 8px;
+}
