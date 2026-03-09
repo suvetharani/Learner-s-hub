@@ -23,7 +23,18 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 🔥 Get single test by ID
+// 🔥 Get all tests (if you're using /all)
+router.get("/all", async (req, res) => {
+  try {
+    const tests = await Test.find();
+    res.json(tests);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// 🔥 Get single test by ID (MUST BE LAST)
 router.get("/:id", async (req, res) => {
   try {
     const test = await Test.findById(req.params.id);

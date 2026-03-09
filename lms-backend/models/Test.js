@@ -7,14 +7,23 @@ const questionSchema = new mongoose.Schema({
   options: [String],
 });
 
-const testSchema = new mongoose.Schema(
-  {
-    title: String,
-    description: String,
-    courseId: String,
-    questions: [questionSchema],
+const testSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  duration: Number, // in minutes
+  totalMarks: Number,
+
+  questions: [questionSchema], // ⭐ THIS WAS MISSING
+
+  instructor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   },
-  { timestamps: true }
-);
+
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 module.exports = mongoose.model("Test", testSchema);

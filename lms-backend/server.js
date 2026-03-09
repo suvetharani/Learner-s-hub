@@ -28,6 +28,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/tests", testRoutes);
+
 app.use("/uploads", express.static("uploads"));
 
 /* ================= SOCKET ================= */
@@ -49,7 +50,10 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", ({ senderId, receiverId, message }) => {
     const receiverSocket = onlineUsers.get(receiverId);
     if (receiverSocket) {
-      io.to(receiverSocket).emit("receiveMessage", message);
+io.to(receiverSocket).emit("receiveMessage", {
+  sender: senderId,
+  ...message,
+});
     }
   });
 
