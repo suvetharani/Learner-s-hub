@@ -41,12 +41,15 @@ export default function CreateTest() {
           setFormTitle(data.title);
           setFormDescription(data.description);
 
-          setQuestions(
-            data.questions.map((q) => ({
-              ...q,
-              id: q._id, // use MongoDB id
-            }))
-          );
+setQuestions(
+  data.questions.map((q, index) => ({
+    id: q._id || index + 1, // fallback id
+    questionText: q.questionText || "",
+    type: q.type || "short",
+    required: q.required || false,
+    options: q.options?.length ? q.options : ["Option 1"],
+  }))
+);
 
           setIsViewMode(true);
         } catch (error) {
@@ -173,7 +176,7 @@ export default function CreateTest() {
 
       {activeTab === "questions" && (
         <>
-          {questions.map((q) => (
+          {questions && questions.map((q) => (
             <div key={q.id} className="question-card">
               <div className="question-top">
                 <input

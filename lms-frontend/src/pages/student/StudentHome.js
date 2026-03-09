@@ -16,6 +16,7 @@ import BatchDetails from "./BatchDetails";   // ✅ NEW
 import Messages from "./Messages";
 import Notes from "./Notes";
 import Ranking from "./Ranking";
+import TakeTest from "./TakeTest";
 
 import Notifications from "./Notifications";
 import Profile from "./Profile";
@@ -71,6 +72,7 @@ function StudentHome() {
           <Route path="profile" element={<Profile />} />
 
           <Route path="course/:id" element={<StudentCourseView />} />
+          <Route path="tests" element={<TakeTest />} />
         </Routes>
       </div>
     </div>

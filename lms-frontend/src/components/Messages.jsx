@@ -85,11 +85,13 @@ export default function Messages() {
     // Add message only once (sender side)
     setMessages((prev) => [...prev, data]);
 
-    socket.emit("sendMessage", {
-      senderId: currentUser._id,
-      receiverId: selectedUser._id,
-      message: data,
-    });
+if (socket.current) {
+  socket.current.emit("sendMessage", {
+    senderId: currentUser._id,
+    receiverId: selectedUser._id,
+    message: data,
+  });
+}
 
     setMessage("");
     setImage(null);

@@ -12,13 +12,14 @@ import {
 } from "react-icons/fa";
 
 const items = [
-  { name: "academics", icon: <FaBook /> },
-  { name: "courses", icon: <FaPlayCircle /> },
-  { name: "instructors", icon: <FaChalkboardTeacher /> },
-  { name: "classroom", icon: <FaDoorOpen /> },
-  { name: "messages", icon: <FaEnvelope /> },
-  { name: "notes", icon: <FaStickyNote />, hasAdd: true },
-  { name: "ranking", icon: <FaTrophy /> },
+  { name: "academics", icon: <FaBook />, path: "/student/academics" },
+  { name: "courses", icon: <FaPlayCircle />, path: "/student/courses" },
+  { name: "instructors", icon: <FaChalkboardTeacher />, path: "/student/instructors" },
+  { name: "classroom", icon: <FaDoorOpen />, path: "/student/classroom" },
+  { name: "Take Test", icon: <FaBook />, path: "/student/tests" }, // ✅ FIXED
+  { name: "messages", icon: <FaEnvelope />, path: "/student/messages" },
+  { name: "notes", icon: <FaStickyNote />, hasAdd: true, path: "/student/notes" },
+  { name: "ranking", icon: <FaTrophy />, path: "/student/ranking" },
   { name: "logout", icon: <FaDoorOpen /> },
 ];
 
@@ -89,16 +90,16 @@ function Sidebar({ isOpen, setIsOpen }) {
           <div key={item.name} className="menu-item">
             <div
               className="menu-left"
-              onClick={() => {
-                if (item.name === "logout") {
-                  localStorage.clear();
-                  navigate("/");
-                } else {
-                  navigate(`/student/${item.name}`);
-                }
+onClick={() => {
+  if (item.name === "logout") {
+    localStorage.clear();
+    navigate("/");
+  } else if (item.path) {
+    navigate(item.path);
+  }
 
-                setIsOpen(false);
-              }}
+  setIsOpen(false);
+}}
             >
               <span className="icon">{item.icon}</span>
               <span>
