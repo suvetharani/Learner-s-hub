@@ -22,7 +22,8 @@ import Notifications from "./Notifications";
 import Profile from "./Profile";
 
 import StudentCourseView from "./StudentCourseView";
-
+import TestProctor from "./TestProctor";
+import StartExam from "./StartExam";
 
 import "../../styles/student/student.css";
 
@@ -73,6 +74,8 @@ function StudentHome() {
 
           <Route path="course/:id" element={<StudentCourseView />} />
           <Route path="tests" element={<TakeTest />} />
+          <Route path="test/:id" element={<TestProctor />} />
+          <Route path="exam/:id" element={<StartExam />} />
         </Routes>
       </div>
     </div>

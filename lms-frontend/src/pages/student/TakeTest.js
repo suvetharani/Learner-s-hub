@@ -4,6 +4,7 @@ import "../../styles/student/taketest.css";
 
 export default function TakeTest() {
   const [tests, setTests] = useState([]);
+  const [acceptedRules, setAcceptedRules] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +23,36 @@ export default function TakeTest() {
 
   return (
     <div className="take-test-container">
-      <h2>Available Tests</h2>
+
+      {/* RULES SECTION */}
+      <div className="rules-box">
+        <h2>Exam Rules & Regulations</h2>
+
+        <ul>
+          <li>Camera and microphone must remain ON during the exam.</li>
+          <li>Video monitoring will be active throughout the test.</li>
+          <li>Tab switching or leaving the exam window will be recorded.</li>
+          <li>Multiple faces detected will be flagged as a violation.</li>
+          <li>Eye movement and suspicious behaviour may be monitored.</li>
+          <li>Copy, paste and right-click actions are restricted.</li>
+          <li>Background noise will be monitored using the microphone.</li>
+          <li>Any violation may result in exam termination.</li>
+        </ul>
+
+        <div className="rules-agree">
+          <input
+            type="checkbox"
+            id="agree"
+            checked={acceptedRules}
+            onChange={() => setAcceptedRules(!acceptedRules)}
+          />
+          <label htmlFor="agree">
+            I agree to follow all the exam rules and regulations
+          </label>
+        </div>
+      </div>
+
+      <h2 className="test-heading">Available Tests</h2>
 
       <div className="test-grid">
         {tests.length === 0 ? (
@@ -37,7 +67,9 @@ export default function TakeTest() {
               <p><strong>Instructor:</strong> {test.instructor?.name}</p>
 
               <button
+                disabled={!acceptedRules}
                 onClick={() => navigate(`/student/test/${test._id}`)}
+                className="start-btn"
               >
                 Start Test
               </button>
