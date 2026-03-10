@@ -1,36 +1,43 @@
-import * as faceapi from "face-api.js";
 import { useEffect } from "react";
+import * as faceapi from "face-api.js";
 
-export default function FaceMonitor(videoRef) {
+export default function FaceMonitor({ videoRef, onViolation }) {
 
   useEffect(() => {
 
-    const loadModels = async () => {
+    let interval;
 
+    const startDetection = async () => {
+
+      // Load model once
       await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
 
-      detectFaces();
-    };
+      interval = setInterval(async () => {
 
-    const detectFaces = async () => {
-
-      setInterval(async () => {
+        if (!videoRef.current || videoRef.current.readyState !== 4) return;
 
         const detections = await faceapi.detectAllFaces(
           videoRef.current,
           new faceapi.TinyFaceDetectorOptions()
         );
 
-        if (detections.length > 1) {
-          alert("Multiple faces detected!");
+        if (detections.length === 0) {
+
+          console.warn("⚠ Face not detected");
+
+          onViolation("no-face");
+
         }
 
-      }, 3000);
+      }, 2000);
 
     };
 
-    loadModels();
+    startDetection();
 
-  }, []);
+    return () => clearInterval(interval);
 
+  }, [videoRef, onViolation]);
+
+  return null;
 }

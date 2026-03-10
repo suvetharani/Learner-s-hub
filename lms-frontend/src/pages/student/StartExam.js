@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import TabMonitor from "../../components/TabMonitor";
+import NoiseMonitor from "../../components/NoiseMonitor";
+import FaceMonitor from "../../components/FaceMonitor";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 
 export default function StartExam() {
 
@@ -8,42 +13,123 @@ export default function StartExam() {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [current, setCurrent] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const studentId = localStorage.getItem("userId");
 
+  const location = useLocation();
+const navigate = useNavigate();
+const videoRef = useRef(null);
+
+const terminateExam = async () => {
+
+  await fetch("http://localhost:5000/api/tests/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      studentId,
+      testId: id,
+      answers: Object.entries(answers).map(([qIndex, ans]) => ({
+        questionIndex: Number(qIndex),
+        answer: ans
+      })),
+      terminated: true
+    })
+  });
+
+  alert("Exam terminated due to violation");
+
+  navigate("/student/tests");
+
+};
+const stream = location.state?.stream;
+useEffect(() => {
+  startCamera();
+}, []);
+
+const startCamera = async () => {
+  try {
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    });
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+
+    // Detect camera off
+    stream.getVideoTracks()[0].onended = () => {
+      alert("Camera turned off. Exam terminated.");
+      terminateExam();
+    };
+
+  } catch (err) {
+    alert("Camera access required for exam.");
+  }
+};
   useEffect(() => {
     fetchTest();
-    detectTabSwitch();
   }, []);
 
   /* FETCH TEST + QUESTIONS */
 
-  const fetchTest = async () => {
-    try {
+const fetchTest = async () => {
 
-      const res = await fetch(`http://localhost:5000/api/tests/${id}`);
-      const data = await res.json();
+  try {
 
-      setQuestions(data.questions);
-      setTimeLeft(data.duration * 60);
+    const res = await fetch(`http://localhost:5000/api/tests/${id}`);
 
-    } catch (err) {
-      console.log(err);
+    if (!res.ok) {
+      throw new Error("Failed to fetch test");
     }
-  };
 
-  /* TIMER */
+    const data = await res.json();
+
+    setQuestions(data.questions || []);
+    setTimeLeft((data.duration || 0) * 60);
+
+  } catch (err) {
+
+    console.error("Error loading exam:", err);
+
+  }
+
+};
 
   useEffect(() => {
 
-    if (timeLeft <= 0) return;
+  if (stream && videoRef.current) {
+    videoRef.current.srcObject = stream;
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+    stream.getVideoTracks()[0].onended = () => {
+      alert("Camera turned off. Exam terminated.");
+      terminateExam();
+    };
+  }
 
-    return () => clearInterval(timer);
+}, [stream]);
 
-  }, [timeLeft]);
+  /* TIMER */
+
+useEffect(() => {
+
+  if (timeLeft === null) return;
+
+  if (timeLeft <= 0) {
+    submitExam();
+    return;
+  }
+
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+
+}, [timeLeft]);
 
   const formatTime = () => {
     const min = Math.floor(timeLeft / 60);
@@ -51,19 +137,9 @@ export default function StartExam() {
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  /* TAB SWITCH DETECTION */
 
-  const detectTabSwitch = () => {
 
-    document.addEventListener("visibilitychange", () => {
 
-      if (document.hidden) {
-        alert("Tab switching detected!");
-      }
-
-    });
-
-  };
 
   /* SAVE ANSWERS */
 
@@ -76,36 +152,66 @@ export default function StartExam() {
 
   /* SUBMIT EXAM */
 
-  const submitExam = async () => {
+const submitExam = async () => {
 
-    const confirmSubmit = window.confirm("Are you sure you want to submit the exam?");
+  const confirmSubmit = window.confirm("Are you sure you want to submit the exam?");
+  if (!confirmSubmit) return;
 
-    if (!confirmSubmit) return;
+  await fetch("http://localhost:5000/api/tests/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      studentId,
+      testId: id,
+      answers: Object.entries(answers).map(([qIndex, ans]) => ({
+  questionIndex: Number(qIndex),
+  answer: ans
+})),
+      terminated:false
+    })
+  });
 
-    await fetch("http://localhost:5000/api/tests/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        testId: id,
-        answers
-      })
-    });
+  alert("Exam submitted successfully");
 
-    alert("Exam submitted successfully");
+  navigate("/student/tests");
 
-  };
+};
 
   if (questions.length === 0) return <p>Loading exam...</p>;
 
   const q = questions[current];
 
-  return (
+const handleViolation = async (type) => {
+
+  console.log("Violation:", type);
+
+  await fetch("http://localhost:5000/api/violations", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      student: studentId,
+      test: id,
+      type: type
+    })
+  });
+
+};
+
+return (
+  <>
+    {/* ================= MONITORING COMPONENTS ================= */}
+    <TabMonitor onViolation={handleViolation} />
+    <NoiseMonitor onViolation={handleViolation} />
+    <FaceMonitor videoRef={videoRef} onViolation={handleViolation} />
+
+    {/* ================= MAIN EXAM LAYOUT ================= */}
     <div style={{ display: "flex", padding: "20px", gap: "20px" }}>
 
       {/* QUESTION NAVIGATION PANEL */}
-
       <div style={{ width: "200px" }}>
 
         <h3>Questions</h3>
@@ -129,7 +235,6 @@ export default function StartExam() {
       </div>
 
       {/* QUESTION AREA */}
-
       <div style={{ flex: 1 }}>
 
         <h3>Time Left: {formatTime()}</h3>
@@ -139,28 +244,24 @@ export default function StartExam() {
         </h4>
 
         {/* MULTIPLE CHOICE */}
-
-        {q.type === "mcq" && q.options.map((opt, i) => (
-
-          <div key={i}>
-            <label>
-              <input
-                type="radio"
-                name={`q-${current}`}
-                value={opt}
-                checked={answers[current] === opt}
-                onChange={() => handleAnswer(opt)}
-              />
-              {opt}
-            </label>
-          </div>
-
-        ))}
+        {q.type === "mcq" &&
+          q.options.map((opt, i) => (
+            <div key={i}>
+              <label>
+                <input
+                  type="radio"
+                  name={`q-${current}`}
+                  value={opt}
+                  checked={answers[current] === opt}
+                  onChange={() => handleAnswer(opt)}
+                />
+                {opt}
+              </label>
+            </div>
+          ))}
 
         {/* SHORT ANSWER */}
-
         {q.type === "short" && (
-
           <input
             type="text"
             value={answers[current] || ""}
@@ -171,13 +272,10 @@ export default function StartExam() {
               marginTop: "10px"
             }}
           />
-
         )}
 
         {/* PARAGRAPH */}
-
         {q.type === "paragraph" && (
-
           <textarea
             rows="5"
             value={answers[current] || ""}
@@ -188,11 +286,9 @@ export default function StartExam() {
               marginTop: "10px"
             }}
           />
-
         )}
 
         {/* NAVIGATION BUTTONS */}
-
         <div style={{ marginTop: "20px" }}>
 
           {current > 0 && (
@@ -224,5 +320,22 @@ export default function StartExam() {
       </div>
 
     </div>
-  );
+
+    {/* ================= FLOATING CAMERA DURING EXAM ================= */}
+    <video
+      ref={videoRef}
+      autoPlay
+      muted
+      style={{
+        position: "fixed",
+        bottom: "20px",
+        right: "20px",
+        width: "150px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+        zIndex: 1000
+      }}
+    />
+  </>
+);
 }

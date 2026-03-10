@@ -25,6 +25,13 @@ export default function TestProctor() {
         video: true,
         audio: true
       });
+      stream.getVideoTracks()[0].onended = () => {
+
+  alert("Camera turned off. Exam terminated.");
+
+  terminateExam();
+
+};
 
       videoRef.current.srcObject = stream;
       setReady(true);
@@ -67,6 +74,23 @@ export default function TestProctor() {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   });
+  const terminateExam = async () => {
+
+  await fetch("http://localhost:5000/api/tests/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      testId: id,
+      answers: {},
+      terminated: true
+    })
+  });
+
+  navigate("/student/tests");
+
+};
 
   return (
     <div style={{ textAlign: "center", paddingTop: "40px" }}>
@@ -105,7 +129,7 @@ export default function TestProctor() {
       {/* Start Button */}
       <button
         disabled={!ready}
-        onClick={() => navigate(`/student/exam/${id}`)}
+onClick={() => navigate(`/student/exam/${id}`)}
         style={{
           padding: "12px 20px",
           border: "none",
