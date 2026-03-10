@@ -2,18 +2,19 @@ const express = require("express");
 const router = express.Router();
 const Violation = require("../models/Violation");
 
-router.post("/log", async (req, res) => {
+router.post("/", async (req, res) => {
 
-  try {
+  const { student, test, type } = req.body;
 
-    const violation = new Violation(req.body);
-    await violation.save();
+  const violation = new Violation({
+    student,
+    test,
+    type
+  });
 
-    res.json({ message: "Violation logged" });
+  await violation.save();
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  res.json({ message: "Violation recorded" });
 
 });
 

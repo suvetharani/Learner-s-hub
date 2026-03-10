@@ -12,8 +12,12 @@ const violationSchema = new mongoose.Schema({
     ref: "Test"
   },
 
-  type: String,
-  time: Date
+  type: String, // tab-switch, noise, no-face, camera-off
+
+  timestamp: {
+    type: Date,
+    default: Date.now
+  }
 
 });
 
