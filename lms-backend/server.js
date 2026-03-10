@@ -11,6 +11,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const noteRoutes = require("./routes/noteRoutes");
 const testRoutes = require("./routes/testRoutes");
+const violationRoutes = require("./routes/violationRoutes");
 
 const app = express();
 const server = http.createServer(app);

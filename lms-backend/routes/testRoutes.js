@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 // 🔥 Get all tests (if you're using /all)
 router.get("/all", async (req, res) => {
   try {
-    const tests = await Test.find();
+    const tests = await Test.find().populate("instructor", "name email");
     res.json(tests);
   } catch (err) {
     console.log(err);
@@ -37,10 +37,17 @@ router.get("/all", async (req, res) => {
 // 🔥 Get single test by ID (MUST BE LAST)
 router.get("/:id", async (req, res) => {
   try {
+
     const test = await Test.findById(req.params.id);
+
+    if (!test) {
+      return res.status(404).json({ message: "Test not found" });
+    }
+
     res.json(test);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 router.delete("/:id", async (req, res) => {
