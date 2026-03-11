@@ -8,8 +8,6 @@ export default function TabMonitor({ onViolation }) {
 
       if (document.hidden) {
 
-        alert("⚠ Tab switching detected");
-
         onViolation("tab-switch");
 
       }
@@ -22,7 +20,7 @@ export default function TabMonitor({ onViolation }) {
       document.removeEventListener("visibilitychange", handleVisibility);
     };
 
-  }, []);
+  }, [onViolation]);
 
   return null;
 }
