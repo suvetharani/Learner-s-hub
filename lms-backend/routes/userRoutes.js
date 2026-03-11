@@ -5,7 +5,10 @@ const User = require("../models/User");
 const {
   getApprovedStudents,
   getPendingStudents,
-  approveStudent
+  approveStudent,
+  trackStudyTime,
+  getMyStudyTime,
+  getStudyRanking,
 } = require("../controllers/userController");
 
 
@@ -77,5 +80,11 @@ router.get("/all", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// ================= STUDY TIME ROUTES =================
+
+router.post("/studytime/track", trackStudyTime);
+router.get("/studytime/me/:id", getMyStudyTime);
+router.get("/studytime/ranking", getStudyRanking);
 
 module.exports = router;

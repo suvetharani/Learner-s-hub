@@ -56,6 +56,23 @@ const userSchema = new mongoose.Schema(
     
     profileImage: {
       type: String
+    },
+
+    // aggregate study time for rankings
+    studyTime: {
+      totalSeconds: {
+        type: Number,
+        default: 0
+      },
+      daily: [
+        {
+          date: String, // YYYY-MM-DD
+          seconds: {
+            type: Number,
+            default: 0
+          }
+        }
+      ]
     }
   },
   { timestamps: true }
