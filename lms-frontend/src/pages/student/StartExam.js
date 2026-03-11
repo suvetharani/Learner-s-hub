@@ -21,6 +21,7 @@ export default function StartExam() {
   const location = useLocation();
 const navigate = useNavigate();
 const videoRef = useRef(null);
+const overlayRef = useRef(null);
 const examContainerRef = useRef(null);
 const questionAreaRef = useRef(null);
 const terminatedRef = useRef(false);
@@ -335,8 +336,8 @@ return (
   <>
     {/* ================= MONITORING COMPONENTS ================= */}
     <TabMonitor onViolation={handleViolation} />
-    <NoiseMonitor onViolation={handleViolation} videoRef={videoRef} />
-    <FaceMonitor videoRef={videoRef} onViolation={handleViolation} />
+    <NoiseMonitor onViolation={handleViolation} />
+    <FaceMonitor videoRef={videoRef} overlayRef={overlayRef} onViolation={handleViolation} />
 
     {/* ================= WARNING TOASTS ================= */}
     <div
@@ -541,11 +542,8 @@ return (
 
     </div>
 
-    {/* ================= FLOATING CAMERA DURING EXAM ================= */}
-    <video
-      ref={videoRef}
-      autoPlay
-      muted
+    {/* ================= FLOATING CAMERA + OVERLAY DURING EXAM ================= */}
+    <div
       style={{
         position: "fixed",
         bottom: isMobile ? "12px" : "20px",
@@ -553,9 +551,32 @@ return (
         width: isMobile ? "120px" : "150px",
         borderRadius: "10px",
         boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-        zIndex: 1000
+        overflow: "hidden",
+        zIndex: 1000,
       }}
-    />
+    >
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
+        }}
+      />
+      <canvas
+        ref={overlayRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+        }}
+      />
+    </div>
   </>
 );
 }
