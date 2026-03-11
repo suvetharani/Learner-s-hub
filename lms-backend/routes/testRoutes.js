@@ -1,3 +1,5 @@
+
+const ExamResult = require("../models/ExamResult");
 const express = require("express");
 const router = express.Router();
 const Test = require("../models/Test");
@@ -57,6 +59,32 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to delete test" });
   }
+});
+
+router.post("/submit", async (req, res) => {
+
+  try {
+
+    const { studentId, testId, answers, terminated } = req.body;
+
+    const result = new ExamResult({
+      student: studentId,
+      test: testId,
+      answers: answers,
+      terminated: terminated
+    });
+
+    await result.save();
+
+    res.json({ message: "Exam answers saved successfully" });
+
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({ message: "Failed to save exam" });
+
+  }
+
 });
 
 module.exports = router;

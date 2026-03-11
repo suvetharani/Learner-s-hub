@@ -29,6 +29,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/tests", testRoutes);
+app.use("/api/violations", violationRoutes);
 
 app.use("/uploads", express.static("uploads"));
 
