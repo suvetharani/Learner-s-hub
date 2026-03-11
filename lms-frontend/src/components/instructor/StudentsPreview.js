@@ -1,39 +1,54 @@
-import { Link } from "react-router-dom";
-import { FaEnvelope } from "react-icons/fa";
-
-const students = [
-  { name: "Arjun", roll: "21IT001", mobile: "9876543210" },
-  { name: "Meena", roll: "21IT002", mobile: "9876543211" },
-  { name: "Ravi", roll: "21IT003", mobile: "9876543212" },
-  { name: "Divya", roll: "21IT004", mobile: "9876543213" },
-  { name: "Karthik", roll: "21IT005", mobile: "9876543214" },
-];
+import { useEffect, useState } from "react";
+import { FaMedal } from "react-icons/fa";
 
 function StudentsPreview() {
-  const preview = students.slice(0, 3); // show only few
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const fetchRanking = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/users/studytime/ranking"
+        );
+        const data = await res.json();
+        if (res.ok && Array.isArray(data)) {
+          setStudents(data.slice(0, 3));
+        }
+      } catch {
+        // ignore errors
+      }
+    };
+
+    fetchRanking();
+  }, []);
 
   return (
-    <div className="box">
+    <div className="box ranking">
       <div className="box-header">
-        <h4>Students</h4>
-        
+        <h4>Top Students (Study Time)</h4>
       </div>
 
-      {preview.map((s) => (
-        <div key={s.roll} className="student-row">
-          <div>
-            <div className="student-name">{s.name}</div>
-            <div className="student-sub">
-              Roll: {s.roll} | {s.mobile}
-            </div>
-          </div>
+      {students.length === 0 ? (
+        <p className="topic-content-hint">No ranking data yet.</p>
+      ) : (
+        students.map((s, index) => {
+          const hours = +(s.totalSeconds / 3600).toFixed(1);
+          return (
+            <div
+              key={s._id || s.name}
+              className={`rank-row ${index === 0 ? "first" : ""}`}
+            >
+              <div className="rank-left">
+                <span className="rank-number">#{index + 1}</span>
+                <FaMedal className="medal-icon" />
+                <span className="rank-name">{s.name}</span>
+              </div>
 
-          <FaEnvelope className="message-icon" />
-        </div>
-      ))}
-      <Link to="/instructor/students" className="view-all">
-          View All
-        </Link>
+              <div className="rank-score">{hours} h</div>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }

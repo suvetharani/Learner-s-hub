@@ -12,7 +12,7 @@ function QuickActions() {
           Upload Course
         </button>
 
-        <button onClick={() => navigate("/instructor/test-creation")}>
+        <button onClick={() => navigate("/instructor/test")}>
           Upload Test
         </button>
       </div>

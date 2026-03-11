@@ -1,5 +1,21 @@
+import { useEffect, useState } from "react";
+
 function Banner() {
-  const name = "Instructor";
+  const [name, setName] = useState("Instructor");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.name) {
+          setName(parsed.name);
+        }
+      }
+    } catch {
+      // ignore parsing/localStorage errors
+    }
+  }, []);
 
   return (
     <div className="banner">

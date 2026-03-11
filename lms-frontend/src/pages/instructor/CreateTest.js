@@ -12,6 +12,8 @@ export default function CreateTest() {
 
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [duration, setDuration] = useState(30);
+  const [totalMarks, setTotalMarks] = useState(0);
 
   const [questions, setQuestions] = useState([
     {
@@ -40,6 +42,8 @@ export default function CreateTest() {
 
           setFormTitle(data.title);
           setFormDescription(data.description);
+          setDuration(data.duration || 30);
+          setTotalMarks(data.totalMarks || 0);
 
 setQuestions(
   data.questions.map((q, index) => ({
@@ -108,9 +112,17 @@ setQuestions(
     );
     if (!confirmSave) return;
 
+    if (!questions.length) {
+      alert("Please add at least one question before saving.");
+      return;
+    }
+
     const testData = {
       title: formTitle || "Untitled Test",
       description: formDescription || "",
+      duration: Number(duration) || 30,
+      totalMarks:
+        Number(totalMarks) || questions.length * 5,
       questions: questions.map(({ id, ...rest }) => rest),
     };
 
@@ -142,7 +154,7 @@ setQuestions(
       <div className="form-header">
         <input
           className="form-title"
-          placeholder="Untitled Form"
+          placeholder="Test title"
           value={formTitle}
           disabled={isViewMode}
           onChange={(e) => setFormTitle(e.target.value)}
@@ -150,11 +162,54 @@ setQuestions(
 
         <input
           className="form-description"
-          placeholder="Form description"
+          placeholder="Short description for students"
           value={formDescription}
           disabled={isViewMode}
           onChange={(e) => setFormDescription(e.target.value)}
         />
+
+        <div
+          style={{
+            display: "flex",
+            gap: "16px",
+            marginTop: "14px",
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <label style={{ fontSize: "12px", color: "#6b7280" }}>
+              Duration (minutes)
+            </label>
+            <input
+              type="number"
+              min="1"
+              className="form-description"
+              style={{ marginTop: 4, maxWidth: 140 }}
+              value={duration}
+              disabled={isViewMode}
+              onChange={(e) => setDuration(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label style={{ fontSize: "12px", color: "#6b7280" }}>
+              Total Marks
+            </label>
+            <input
+              type="number"
+              min="0"
+              className="form-description"
+              style={{ marginTop: 4, maxWidth: 140 }}
+              value={totalMarks}
+              disabled={isViewMode}
+              onChange={(e) => setTotalMarks(e.target.value)}
+            />
+          </div>
+
+          <div style={{ marginLeft: "auto", fontSize: "12px", color: "#6b7280" }}>
+            Questions: <strong>{questions.length}</strong>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -272,11 +327,129 @@ setQuestions(
         </>
       )}
 
-      {activeTab === "responses" && (
-        <div className="responses-section">
-          <h3>No responses yet</h3>
-        </div>
+      {activeTab === "responses" && <ResponsesTab testId={id} questions={questions} />}
+    </div>
+  );
+}
+
+function ResponsesTab({ testId, questions }) {
+  const [responses, setResponses] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!testId) return;
+
+    const fetchResponses = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/tests/${testId}/responses`
+        );
+        const data = await res.json();
+        if (res.ok && Array.isArray(data)) {
+          setResponses(data);
+        }
+      } catch (err) {
+        console.error("Error fetching responses:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResponses();
+  }, [testId]);
+
+  if (!testId) {
+    return (
+      <div className="responses-section">
+        <h3>Save the test first to view responses.</h3>
+      </div>
+    );
+  }
+
+  return (
+    <div className="responses-section">
+      <h3>Responses</h3>
+
+      {loading && <p>Loading responses...</p>}
+
+      {!loading && responses.length === 0 && (
+        <p>No responses recorded yet.</p>
       )}
+
+      {!loading &&
+        responses.map((r) => (
+          <div key={r._id} className="question-card">
+            <div className="question-top">
+              <div>
+                <strong>{r.student?.name}</strong>{" "}
+                <span style={{ fontSize: 12, color: "#6b7280" }}>
+                  ({r.student?.rollNumber || r.student?.email})
+                </span>
+              </div>
+              <div style={{ marginLeft: "auto", fontSize: 12 }}>
+                {new Date(r.submittedAt).toLocaleString()}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 10, fontSize: 13 }}>
+              <p>
+                Status:{" "}
+                <strong>{r.terminated ? "Terminated" : "Submitted"}</strong>
+              </p>
+
+              <div style={{ marginTop: 10 }}>
+                <h4 style={{ marginBottom: 6 }}>Answers</h4>
+                {r.answers.map((a) => {
+                  const q = questions[a.questionIndex];
+                  return (
+                    <div
+                      key={a.questionIndex}
+                      style={{
+                        marginBottom: 8,
+                        padding: 8,
+                        borderRadius: 8,
+                        background: "#f9fafb",
+                        border: "1px solid #e5e7eb",
+                      }}
+                    >
+                      <div style={{ fontSize: 13, fontWeight: 600 }}>
+                        Q{a.questionIndex + 1}: {q?.questionText || ""}
+                      </div>
+                      <div style={{ fontSize: 13, marginTop: 4 }}>
+                        {a.answer}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ marginTop: 10 }}>
+                <h4 style={{ marginBottom: 6 }}>Violations</h4>
+                {(!r.violations || r.violations.length === 0) && (
+                  <p style={{ fontSize: 13 }}>No violations recorded.</p>
+                )}
+                {r.violations &&
+                  r.violations.map((v) => (
+                    <div
+                      key={v._id}
+                      style={{
+                        marginBottom: 6,
+                        padding: 6,
+                        borderRadius: 6,
+                        background: "#fff7ed",
+                        border: "1px solid #fed7aa",
+                        fontSize: 12,
+                      }}
+                    >
+                      <strong>{v.type}</strong> at{" "}
+                      {new Date(v.timestamp).toLocaleTimeString()}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        ))}
     </div>
   );
 }
