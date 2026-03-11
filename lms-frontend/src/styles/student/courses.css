@@ -1,20 +1,46 @@
-/* ================= PAGE ================= */
+/* Overall page */
 .basic-courses {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 18px;
 }
 
+.courses-header h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
 
-/* ================= DOMAIN BLOCK ================= */
+.courses-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.courses-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.domains-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Domain block */
 .domain {
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-  border: 1px solid #eee;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+/* header row */
 }
 
-/* header row */
 .domain-header {
   display: flex;
   justify-content: space-between;
@@ -23,68 +49,69 @@
 }
 
 .domain-header h3 {
+/* toggle icon */
   margin: 0;
   font-size: 18px;
 }
+/* rotate when open */
 
-/* toggle icon */
 .toggle {
   transition: transform 0.3s ease;
 }
 
-/* rotate when open */
 .toggle.open {
   transform: rotate(180deg);
 }
 
-
-/* ================= COURSE GRID ================= */
+/* Course grid */
 .courses {
-  margin-top: 15px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
-}
-
+  margin-top: 14px;
 
 /* ================= COURSE CARD ================= */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
 .course-card {
-  padding: 15px;
+  padding: 12px 12px 14px;
   border-radius: 12px;
   border: 1px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
+  cursor: pointer;
+
+/* ================= AUTO COLOR THEMES ================= */
 }
 
 .course-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.09);
 }
 
-
-/* ================= AUTO COLOR THEMES ================= */
 .color-0 {
   background: #eef2ff;
-  border-left: 5px solid #6a5acd;
+  border-left: 4px solid #4f46e5;
 }
 
 .color-1 {
-  background: #e8f9ff;
-  border-left: 5px solid #00bcd4;
+  background: #e0f2fe;
+  border-left: 4px solid #0ea5e9;
 }
 
 .color-2 {
-  background: #eafbea;
-  border-left: 5px solid #4caf50;
+
+/* ================= TOP ================= */
+  background: #ecfdf3;
+  border-left: 4px solid #22c55e;
 }
 
 .color-3 {
-  background: #fff4e5;
-  border-left: 5px solid #ff9800;
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
 }
 
+/* ================= ARROW ================= */
 
-/* ================= TOP ================= */
 .course-head {
   display: flex;
   justify-content: space-between;
@@ -95,60 +122,163 @@
   margin: 0;
   font-size: 14px;
 }
-
-
-/* ================= ARROW ================= */
-.arrow {
-  width: 28px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
 .arrow:hover {
   background: black;
   color: white;
   transform: translateX(2px);
 }
 
+/* ================= PROGRESS ================= */
+
 
 /* ================= TEXT ================= */
-.progress-text {
-  font-size: 12px;
-  margin: 10px 0 6px;
+
+.arrow {
+  width: 26px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+
+/* ================= EMPTY ================= */
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
 }
 
+.progress-text {
+  font-size: 12px;
+  margin: 8px 0 4px;
+}
 
-/* ================= PROGRESS ================= */
 .progress-bar {
-  height: 8px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
+  height: 7px;
+  background: rgba(15, 23, 42, 0.06);
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(to right, #6a5acd, #9f8cff);
-  border-radius: 10px;
+  background: linear-gradient(to right, #4f46e5, #818cf8);
+  border-radius: 999px;
 }
 
-
-/* ================= EMPTY ================= */
 .empty {
   font-size: 13px;
-  color: gray;
+  color: #9ca3af;
 }
 
+/* Contents panel */
+.contents-column {
+  display: flex;
+  align-items: stretch;
+}
 
-/* ================= MOBILE ================= */
+.contents-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  width: 100%;
+}
+
+.contents-card h3 {
+  margin: 0 0 4px;
+}
+
+.contents-subtitle {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.contents-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contents-list li button {
+  width: 100%;
+  text-align: left;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.contents-list li button:hover {
+  background: #eef2ff;
+  border-color: #4f46e5;
+}
+
+.contents-list li button.active-topic {
+  background: #eef2ff;
+  border-color: #4f46e5;
+  font-weight: 600;
+}
+
+.contents-hint {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.contents-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: #6b7280;
+}
+
+.topic-content-panel {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.topic-content-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.topic-content-body {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.5;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.topic-content-hint {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.topic-content-error {
+  font-size: 12px;
+  color: #b91c1c;
+}
+
 @media (max-width: 900px) {
+  .courses-layout {
+    grid-template-columns: 1fr;
+  }
+
   .courses {
     grid-template-columns: 1fr;
   }

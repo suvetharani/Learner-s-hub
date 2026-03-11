@@ -1,44 +1,63 @@
+import { useEffect, useState } from "react";
 import "../../styles/student/ranking.css";
 
-const students = [
-  { name: "Arun Kumar", points: 980 },
-  { name: "Priya Sharma", points: 920 },
-  { name: "Rahul Verma", points: 900 },
-  { name: "Sneha Reddy", points: 870 },
-  { name: "Karthik M", points: 860 },
-  { name: "Meena Das", points: 830 },
-  { name: "Vikram Rao", points: 810 },
-  { name: "Anjali N", points: 790 },
-  { name: "Rohit S", points: 760 },
-  { name: "Divya P", points: 740 },
-];
-
 export default function Ranking() {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRanking = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/users/studytime/ranking"
+        );
+        const data = await res.json();
+        if (res.ok && Array.isArray(data)) {
+          setStudents(data);
+        }
+      } catch {
+        // ignore errors, show empty
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRanking();
+  }, []);
+
   return (
     <div className="ranking-page">
       <h2 className="title">🏆 Student Leaderboard</h2>
 
-      <div className="ranking-list">
-        {students.map((s, i) => (
-          <div
-            key={i}
-            className={`rank-card ${
-              i === 0 ? "first" : i === 1 ? "second" : i === 2 ? "third" : ""
-            }`}
-          >
-            {/* Rank */}
-            <div className="rank">#{i + 1}</div>
+      {loading && <p className="topic-content-hint">Loading ranking...</p>}
 
-            {/* Name */}
-            <div className="info">
-              <h4>{s.name}</h4>
-            </div>
+      {!loading && !students.length && (
+        <p className="empty">No study time data available yet.</p>
+      )}
 
-            {/* Points badge */}
-            <div className="points">{s.points} pts</div>
-          </div>
-        ))}
-      </div>
+      {!loading && students.length > 0 && (
+        <div className="ranking-list">
+          {students.map((s, i) => {
+            const hours = +(s.totalSeconds / 3600).toFixed(1);
+            return (
+              <div
+                key={s._id || s.name}
+                className={`rank-card ${
+                  i === 0 ? "first" : i === 1 ? "second" : i === 2 ? "third" : ""
+                }`}
+              >
+                <div className="rank">#{i + 1}</div>
+
+                <div className="info">
+                  <h4>{s.name}</h4>
+                </div>
+
+                <div className="points">{hours} h</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

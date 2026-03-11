@@ -1,0 +1,12 @@
+AI Applications
+---------------
+
+Artificial Intelligence is used in many real-world applications, including:
+- Recommendation systems (e.g., shopping, movies)
+- Virtual assistants and chatbots
+- Self-driving vehicles
+- Fraud detection
+- Medical diagnosis
+
+You can replace this text with detailed notes, examples, and diagrams as needed.***
+ End Patch```}"}}

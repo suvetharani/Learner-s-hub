@@ -64,7 +64,7 @@ function StudentList() {
           <span>Name</span>
           <span>Email</span>
           <span>Roll Number</span>
-          <span>Message</span>
+          
         </div>
 
         {approvedStudents.map((s) => (
@@ -78,12 +78,7 @@ function StudentList() {
             
             <span>{s.email}</span>
             <span>{s.rollNumber}</span>
-<span
-  className="message-icon clickable"
-  onClick={() => navigate(`/instructor/messages/${s._id}`)}
->
-  <FaEnvelope />
-</span>
+
           </div>
         ))}
       </div>

@@ -1,92 +1,140 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import "../../styles/student/academics.css";
 
-
 const semesters = [
-  {
-    sem: "Semester 1",
-    courses: [
-      { name: "Maths I", progress: 70 },
-      { name: "Physics", progress: 40 },
-      { name: "C Programming", progress: 80 },
-      { name: "Basic Electrical", progress: 55 },
-      { name: "Engineering Graphics", progress: 30 },
-    ],
-  },
-  {
-    sem: "Semester 2",
-    courses: [
-      { name: "Maths II", progress: 60 },
-      { name: "Chemistry", progress: 75 },
-      { name: "Data Structures", progress: 50 },
-      { name: "Digital Logic", progress: 20 },
-      { name: "Environmental Studies", progress: 90 },
-    ],
-  },
-  { sem: "Semester 3", courses: [] },
-  { sem: "Semester 4", courses: [] },
-  { sem: "Semester 5", courses: [] },
-  { sem: "Semester 6", courses: [] },
-  { sem: "Semester 7", courses: [] },
-  { sem: "Semester 8", courses: [] },
+  "Semester 1",
+  "Semester 2",
+  "Semester 3",
+  "Semester 4",
+  "Semester 5",
+  "Semester 6",
+  "Semester 7",
+  "Semester 8",
 ];
 
 export default function Academics() {
-  // store which semesters are open
-  const [openSem, setOpenSem] = useState({});
+  const [selectedSemesterIndex, setSelectedSemesterIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("materials"); // "materials" | "question-paper"
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const toggleSemester = (index) => {
-    setOpenSem((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
+  const token = localStorage.getItem("token");
+  const currentSemesterNumber = selectedSemesterIndex + 1;
+
+  useEffect(() => {
+    fetchResources(currentSemesterNumber, activeTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSemesterIndex, activeTab]);
+
+  const fetchResources = async (semesterNumber, tab) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/academics?semester=${semesterNumber}&type=${
+          tab === "materials" ? "material" : "question-paper"
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setResources(data);
+      } else {
+        console.error(data.message || "Failed to load resources");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="academics">
-      {semesters.map((s, index) => (
-        <div key={index} className="semester">
-          
-          {/* TITLE ROW */}
-          <div
-            className="semester-header"
-            onClick={() => toggleSemester(index)}
-          >
-            <h3>{s.sem}</h3>
-            <span className={`toggle ${openSem[index] ? "open" : ""}`}>
-              ▼
+      <div className="academics-layout">
+        {/* Left: semester list */}
+        <div className="academics-semester-list">
+          {semesters.map((label, index) => (
+            <button
+              key={label}
+              className={`semester-pill ${
+                selectedSemesterIndex === index ? "active" : ""
+              }`}
+              onClick={() => setSelectedSemesterIndex(index)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Right: tabs + content (view only) */}
+        <div className="academics-content">
+          <div className="academics-header-row">
+            <h3>{semesters[selectedSemesterIndex]}</h3>
+            <span className="academics-subtitle">
+              View uploaded materials & question papers
             </span>
           </div>
 
-          {/* COURSES */}
-          {openSem[index] && (
-            <div className="courses">
-              {s.courses.length === 0 ? (
-                <p className="empty">Courses will be updated soon.</p>
-              ) : (
-                s.courses.map((c, i) => (
-                  <div key={c.name} className={`course-card color-${i % 4}`}>
+          {/* Tabs */}
+          <div className="academics-tabs">
+            <button
+              className={`academics-tab ${
+                activeTab === "materials" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("materials")}
+            >
+              Materials
+            </button>
+            <button
+              className={`academics-tab ${
+                activeTab === "question-paper" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("question-paper")}
+            >
+              Question Papers
+            </button>
+          </div>
 
-                    <div className="course-head">
-                      <h4>{c.name}</h4>
-                      <div className="arrow">→</div>
-                    </div>
-
-                    <p className="progress-text">{c.progress}% completed</p>
-
-                    <div className="progress-bar">
-                      <div
-                        className="progress-fill"
-                        style={{ width: `${c.progress}%` }}
-                      />
-                    </div>
+          {/* List only (no upload on student side) */}
+          <div className="academics-list">
+            {loading ? (
+              <p>Loading {activeTab === "materials" ? "materials" : "papers"}...</p>
+            ) : resources.length === 0 ? (
+              <p className="empty">No items available for this semester.</p>
+            ) : (
+              resources.map((item) => (
+                <div key={item._id} className="academics-item-card">
+                  <div className="academics-item-main">
+                    <h4>{item.title || item.fileName}</h4>
+                    <span className="academics-item-meta">
+                      Semester {item.semester} •{" "}
+                      {item.resourceType === "material"
+                        ? "Material"
+                        : "Question Paper"}
+                    </span>
                   </div>
-                ))
-              )}
-            </div>
-          )}
+                  <a
+                    href={`http://localhost:5000/${item.fileUrl.replace(
+                      /\\/g,
+                      "/"
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="academics-item-link"
+                  >
+                    View
+                  </a>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 }

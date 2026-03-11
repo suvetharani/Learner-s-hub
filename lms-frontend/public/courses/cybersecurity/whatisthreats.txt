@@ -1,0 +1,14 @@
+What Are Security Threats?
+--------------------------
+
+In cybersecurity, a "threat" is any potential danger that can exploit a vulnerability
+to compromise the confidentiality, integrity, or availability of information or systems.
+
+Common examples:
+- Malware and viruses
+- Phishing attacks
+- Denial-of-Service (DoS) attacks
+- Insider threats
+
+You can expand this file with more explanations, diagrams, and case studies later.***
+ End Patch```}"""

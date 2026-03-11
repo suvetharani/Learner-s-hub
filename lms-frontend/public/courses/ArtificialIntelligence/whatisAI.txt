@@ -1,0 +1,12 @@
+What is Artificial Intelligence (AI)?
+------------------------------------
+
+Artificial Intelligence is the field of computer science that focuses on building systems
+that can perform tasks which normally require human intelligence, such as:
+- understanding natural language
+- recognizing patterns and images
+- making decisions
+- learning from data
+
+You can replace this text with your own content later.***
+ End Patch```}"}}
