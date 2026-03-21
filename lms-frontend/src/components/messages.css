@@ -204,6 +204,17 @@
   border-radius: 8px;
 }
 
+.file-link {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #1d4ed8;
+  text-decoration: none;
+  font-size: 13px;
+}
+
 /* ============================= */
 /* MOBILE VIEW */
 /* ============================= */

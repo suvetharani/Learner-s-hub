@@ -8,7 +8,7 @@ function Ranking() {
     const fetchTop = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/users/studytime/ranking"
+          "http://localhost:5000/api/users/points/ranking"
         );
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
@@ -36,7 +36,6 @@ function Ranking() {
       <h4 className="ranking-title">Top Students</h4>
 
       {students.map((s, index) => {
-        const hours = +(s.totalSeconds / 3600).toFixed(1);
         return (
           <div
             key={s._id || s.name}
@@ -48,7 +47,7 @@ function Ranking() {
               <span className="rank-name">{s.name}</span>
             </div>
 
-            <div className="rank-score">{hours} h</div>
+            <div className="rank-score">{s.points || 0} pts</div>
           </div>
         );
       })}

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/student/courses.css";
 
 // Static course structure (topics map to local .txt content files inside public/courses)
@@ -9,6 +10,7 @@ const domainConfig = [
       {
         id: "intro-ai",
         name: "Introduction to AI",
+        points: 10,
         topics: [
           {
             id: "whatisai",
@@ -25,11 +27,13 @@ const domainConfig = [
       {
         id: "ml-basics",
         name: "Machine Learning Basics",
+        points: 5,
         topics: [],
       },
       {
         id: "nn-basics",
         name: "Neural Networks",
+        points: 5,
         topics: [],
       },
     ],
@@ -40,6 +44,7 @@ const domainConfig = [
       {
         id: "network-security",
         name: "Network Security",
+        points: 10,
         topics: [
           {
             id: "what-is-threats",
@@ -51,11 +56,13 @@ const domainConfig = [
       {
         id: "ethical-hacking",
         name: "Ethical Hacking",
+        points: 5,
         topics: [],
       },
       {
         id: "cryptography",
         name: "Cryptography",
+        points: 5,
         topics: [],
       },
     ],
@@ -66,16 +73,19 @@ const domainConfig = [
       {
         id: "html-css",
         name: "HTML & CSS",
+        points: 5,
         topics: [],
       },
       {
         id: "javascript",
         name: "JavaScript",
+        points: 5,
         topics: [],
       },
       {
         id: "react-basics",
         name: "React Basics",
+        points: 5,
         topics: [],
       },
     ],
@@ -86,11 +96,13 @@ const domainConfig = [
       {
         id: "flutter-basics",
         name: "Flutter Basics",
+        points: 5,
         topics: [],
       },
       {
         id: "firebase",
         name: "Firebase",
+        points: 5,
         topics: [],
       },
     ],
@@ -101,33 +113,49 @@ const domainConfig = [
   },
 ];
 
-const PROGRESS_KEY = "courseTopicProgress";
 const RECENT_COURSES_KEY = "recentCourses";
 
 export default function BasicComputerCourses() {
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
   const [openDomain, setOpenDomain] = useState({});
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [domains, setDomains] = useState(domainConfig);
-  const [activeTopic, setActiveTopic] = useState(null);
-  const [topicContent, setTopicContent] = useState("");
-  const [loadingContent, setLoadingContent] = useState(false);
-  const [contentError, setContentError] = useState("");
-  const [readTopicIds, setReadTopicIds] = useState(() => {
-    try {
-      const raw = localStorage.getItem(PROGRESS_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [domains] = useState(domainConfig);
+  const [readTopicIds, setReadTopicIds] = useState([]);
+  const [completedCourseIds, setCompletedCourseIds] = useState([]);
+
+  const recentCoursesKey = useMemo(
+    () => `${RECENT_COURSES_KEY}:${userId || "guest"}`,
+    [userId]
+  );
 
   useEffect(() => {
-    try {
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(readTopicIds));
-    } catch {
-      // ignore
+    if (!userId) return;
+    const loadProgress = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/users/course-progress/${userId}`
+        );
+        const data = await res.json();
+        if (res.ok) {
+          setReadTopicIds(data.readTopicIds || []);
+          setCompletedCourseIds(data.completedCourseIds || []);
+        }
+      } catch {
+        // ignore errors and keep default states
+      }
+    };
+    loadProgress();
+  }, [userId]);
+
+  const getCourseById = (courseId) => {
+    for (const domain of domains) {
+      const found = domain.courses.find((c) => c.id === courseId);
+      if (found) return found;
     }
-  }, [readTopicIds]);
+    return null;
+  };
 
   const toggleDomain = (index) => {
     setOpenDomain((prev) => ({
@@ -141,6 +169,7 @@ export default function BasicComputerCourses() {
       id: course.id,
       name: course.name,
       domain: domainTitle,
+      points: course.points || 0,
       topics: course.topics || [],
     };
 
@@ -151,7 +180,7 @@ export default function BasicComputerCourses() {
 
     // persist to "recent courses" so CurrentCourses can read it
     try {
-      const raw = localStorage.getItem(RECENT_COURSES_KEY);
+      const raw = localStorage.getItem(recentCoursesKey);
       const list = raw ? JSON.parse(raw) : [];
       const updated = Array.isArray(list) ? [...list] : [];
 
@@ -161,6 +190,7 @@ export default function BasicComputerCourses() {
         name: course.name,
         domain: domainTitle,
         progress,
+        points: course.points || 0,
         lastAccessed: new Date().toISOString(),
       };
 
@@ -171,18 +201,24 @@ export default function BasicComputerCourses() {
       }
 
       const finalList = updated.slice(0, 10);
-      localStorage.setItem(RECENT_COURSES_KEY, JSON.stringify(finalList));
+      localStorage.setItem(recentCoursesKey, JSON.stringify(finalList));
 
       // notify other components (like CurrentCourses) inside this tab
       window.dispatchEvent(new Event("recentCoursesUpdated"));
+
+      if (userId) {
+        fetch("http://localhost:5000/api/users/recent-courses/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, course: entry })
+        }).catch(() => {
+          // ignore backend sync errors
+        });
+      }
     } catch {
       // ignore storage errors
     }
 
-    // clear previously selected topic/content when switching course
-    setActiveTopic(null);
-    setTopicContent("");
-    setContentError("");
   };
 
   const computeCourseProgress = (course) => {
@@ -194,42 +230,53 @@ export default function BasicComputerCourses() {
     return Math.round((readCount / totalTopics) * 100);
   };
 
-  const handleTopicClick = (courseId, topic) => {
+  const handleTopicClick = async (courseId, topic) => {
     if (!topic?.filePath) return;
+    const course = getCourseById(courseId);
 
     const key = `${courseId}:${topic.id}`;
-    setReadTopicIds((prev) =>
-      prev.includes(key) ? prev : [...prev, key]
-    );
+    const willAddNew = !readTopicIds.includes(key);
+    const nextReadTopicIds = willAddNew ? [...readTopicIds, key] : readTopicIds;
+    setReadTopicIds(nextReadTopicIds);
 
-    const href = topic.filePath.startsWith("/")
-      ? topic.filePath
-      : `/${topic.filePath}`;
+    if (course?.topics?.length && userId) {
+      const readCount = course.topics.filter((t) =>
+        nextReadTopicIds.includes(`${course.id}:${t.id}`)
+      ).length;
+      const isCompletedNow = readCount === course.topics.length;
 
-    setActiveTopic({
-      id: topic.id,
-      title: topic.title,
-    });
-    setLoadingContent(true);
-    setContentError("");
-    setTopicContent("");
-
-    fetch(href)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to load content");
+      try {
+        const res = await fetch("http://localhost:5000/api/users/course-progress/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            courseId,
+            topicId: topic.id,
+            coursePoints: course.points || 0,
+            completed: isCompletedNow,
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setReadTopicIds(data.learning?.readTopicIds || nextReadTopicIds);
+          setCompletedCourseIds(data.learning?.completedCourseIds || []);
         }
-        return res.text();
-      })
-      .then((text) => {
-        setTopicContent(text);
-      })
-      .catch(() => {
-        setContentError("Unable to load this topic content. Please try again.");
-      })
-      .finally(() => {
-        setLoadingContent(false);
-      });
+      } catch {
+        // ignore and proceed to topic page
+      }
+    }
+
+    const encodedPath = encodeURIComponent(topic.filePath || "");
+    navigate(
+      `/student/courses/topic/${courseId}/${topic.id}?file=${encodedPath}&title=${encodeURIComponent(topic.title || "")}`,
+      {
+        state: {
+          topicTitle: topic.title,
+          filePath: topic.filePath,
+        },
+      }
+    );
   };
 
   return (
@@ -279,7 +326,7 @@ export default function BasicComputerCourses() {
                         {c.topics && c.topics.length > 0 ? (
                           <>
                             <p className="progress-text">
-                              {progress}% completed • {c.topics.length} topics
+                              {progress}% completed • {c.topics.length} topics • {c.points || 0}pts
                             </p>
                             <div className="progress-bar">
                               <div
@@ -308,7 +355,7 @@ export default function BasicComputerCourses() {
             <div className="contents-card">
               <h3>{selectedCourse.name}</h3>
               <p className="contents-subtitle">
-                Domain: {selectedCourse.domain}
+                Domain: {selectedCourse.domain} • {selectedCourse.points || 0}pts
               </p>
 
               {selectedCourse.topics.length === 0 ? (
@@ -316,55 +363,26 @@ export default function BasicComputerCourses() {
                   Contents for this course will be added soon.
                 </p>
               ) : (
-                <>
-                  <ul className="contents-list">
-                    {selectedCourse.topics.map((topic) => (
-                      <li key={topic.id}>
-                        <button
-                          type="button"
-                          className={
-                            activeTopic?.id === topic.id ? "active-topic" : ""
-                          }
-                          onClick={() =>
-                            handleTopicClick(selectedCourse.id, topic)
-                          }
-                        >
-                          {topic.title}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                <ul className="contents-list">
+                  {selectedCourse.topics.map((topic) => (
+                    <li key={topic.id}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleTopicClick(selectedCourse.id, topic)
+                        }
+                      >
+                        {topic.title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-                  <div className="topic-content-panel">
-                    {loadingContent && (
-                      <p className="topic-content-hint">Loading content...</p>
-                    )}
-
-                    {contentError && !loadingContent && (
-                      <p className="topic-content-error">{contentError}</p>
-                    )}
-
-                    {!loadingContent && !contentError && topicContent && (
-                      <>
-                        <h4 className="topic-content-title">
-                          {activeTopic?.title}
-                        </h4>
-                        <pre className="topic-content-body">
-                          {topicContent}
-                        </pre>
-                      </>
-                    )}
-
-                    {!loadingContent &&
-                      !contentError &&
-                      !topicContent &&
-                      activeTopic && (
-                        <p className="topic-content-hint">
-                          Click a topic again if the content does not appear.
-                        </p>
-                      )}
-                  </div>
-                </>
+              {!!selectedCourse.topics.length && completedCourseIds.includes(selectedCourse.id) && (
+                <p className="topic-content-hint">
+                  Course completed. {selectedCourse.points || 0} points awarded.
+                </p>
               )}
             </div>
           ) : (

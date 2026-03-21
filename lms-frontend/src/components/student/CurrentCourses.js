@@ -10,7 +10,9 @@ function CurrentCourses() {
 
   const loadCourses = () => {
     try {
-      const raw = localStorage.getItem(RECENT_COURSES_KEY);
+      const userId = localStorage.getItem("userId");
+      const key = `${RECENT_COURSES_KEY}:${userId || "guest"}`;
+      const raw = localStorage.getItem(key);
       const list = raw ? JSON.parse(raw) : [];
       if (Array.isArray(list)) {
         setCourses(list);
@@ -22,8 +24,23 @@ function CurrentCourses() {
     }
   };
 
+  const loadCoursesFromBackend = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/users/recent-courses/${userId}`);
+      const data = await res.json();
+      if (res.ok && Array.isArray(data)) {
+        setCourses(data);
+      }
+    } catch {
+      // ignore backend failures and keep local data
+    }
+  };
+
   useEffect(() => {
     loadCourses();
+    loadCoursesFromBackend();
 
     const handler = () => loadCourses();
     window.addEventListener("recentCoursesUpdated", handler);

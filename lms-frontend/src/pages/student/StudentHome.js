@@ -24,6 +24,7 @@ import Profile from "./Profile";
 import StudentCourseView from "./StudentCourseView";
 import TestProctor from "./TestProctor";
 import StartExam from "./StartExam";
+import CourseTopicPage from "./CourseTopicPage";
 
 import "../../styles/student/student.css";
 
@@ -60,6 +61,7 @@ function StudentHome() {
           {/* ================= OTHER PAGES ================= */}
           <Route path="academics" element={<Academics />} />
           <Route path="courses" element={<Courses />} />
+          <Route path="courses/topic/:courseId/:topicId" element={<CourseTopicPage />} />
           <Route path="instructors" element={<Instructors />} />
 
           {/* Classroom */}

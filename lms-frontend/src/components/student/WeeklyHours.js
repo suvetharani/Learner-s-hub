@@ -23,7 +23,6 @@ function WeeklyHours() {
   const [loading, setLoading] = useState(true);
 
   const sessionStartRef = useRef(Date.now());
-  const hasSentRef = useRef(false);
 
   const userId = useMemo(() => localStorage.getItem("userId"), []);
 
@@ -64,9 +63,6 @@ function WeeklyHours() {
     if (!userId) return;
 
     const sendSession = () => {
-      if (hasSentRef.current) return;
-      hasSentRef.current = true;
-
       const now = Date.now();
       const seconds = Math.round((now - sessionStartRef.current) / 1000);
       if (seconds <= 0) return;
@@ -82,6 +78,9 @@ function WeeklyHours() {
       }).catch(() => {
         // ignore network errors
       });
+
+      // start a fresh segment after every upload
+      sessionStartRef.current = Date.now();
     };
 
     const handleVisibility = () => {
@@ -92,27 +91,38 @@ function WeeklyHours() {
 
     window.addEventListener("beforeunload", sendSession);
     document.addEventListener("visibilitychange", handleVisibility);
+    const intervalId = setInterval(sendSession, 60000);
 
     return () => {
       sendSession();
       window.removeEventListener("beforeunload", sendSession);
       document.removeEventListener("visibilitychange", handleVisibility);
+      clearInterval(intervalId);
     };
   }, [userId]);
 
   const daysConfig = getLast7Days();
 
-  const hoursData = daysConfig.map(({ key }) => {
+  const minutesData = daysConfig.map(({ key }) => {
     const sec = dailySeconds[key] || 0;
-    return +(sec / 3600).toFixed(1); // hours with 1 decimal
+    return Math.round(sec / 60);
   });
 
-  const max = Math.max(...hoursData, 1);
+  const max = Math.max(...minutesData, 1);
+
+  const formatDuration = (minutes) => {
+    if (minutes >= 60) {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return `${h}h ${m}m`;
+    }
+    return `${minutes}m`;
+  };
 
   return (
     <div className="weekly-card">
       <div className="weekly-header">
-        <h4>Weekly Study Hours</h4>
+        <h4>Weekly Study Time</h4>
       </div>
 
       <div className="chart-area">
@@ -124,9 +134,9 @@ function WeeklyHours() {
               <div className="bar-track">
                 <div
                   className="bar-fill"
-                  style={{ height: `${(hoursData[i] / max) * 100}%` }}
+                  style={{ height: `${(minutesData[i] / max) * 100}%` }}
                 >
-                  <span className="tooltip">{hoursData[i]}h</span>
+                  <span className="tooltip">{formatDuration(minutesData[i])}</span>
                 </div>
               </div>
 

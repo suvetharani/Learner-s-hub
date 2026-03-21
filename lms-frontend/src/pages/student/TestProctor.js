@@ -75,6 +75,7 @@ export default function TestProctor() {
     };
   });
   const terminateExam = async () => {
+  const studentId = localStorage.getItem("userId");
 
   await fetch("http://localhost:5000/api/tests/submit", {
     method: "POST",
@@ -82,6 +83,7 @@ export default function TestProctor() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
+      studentId,
       testId: id,
       answers: {},
       terminated: true

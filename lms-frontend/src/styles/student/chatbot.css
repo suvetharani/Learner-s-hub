@@ -61,7 +61,6 @@
   margin-bottom: 8px;
   font-size: 13px;
   word-wrap: break-word;
-  line-height: 1.5;
 }
 
 /* BOT → LEFT */
@@ -104,21 +103,6 @@
   cursor: pointer;
 }
 
-.chatbot-plus {
-  border: none;
-  background: transparent;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b7280;
-  cursor: pointer;
-}
-
-.chatbot-plus:hover {
-  color: #111827;
-}
-
 /* ================= MINIMIZED ================= */
 .chatbot.mini {
   height: auto;
@@ -136,15 +120,4 @@
     right: 10px;
     bottom: 10px;
   }
-}
-
-/* Page mode */
-.chatbot.chatbot-page {
-  position: static;
-  width: 100%;
-  max-width: 900px;
-  height: calc(100vh - 140px);
-  margin: 0 auto;
-  box-shadow: none;
-  border: 1px solid #e5e7eb;
 }

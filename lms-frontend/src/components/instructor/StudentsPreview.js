@@ -8,7 +8,7 @@ function StudentsPreview() {
     const fetchRanking = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/users/studytime/ranking"
+          "http://localhost:5000/api/users/points/ranking"
         );
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
@@ -25,14 +25,13 @@ function StudentsPreview() {
   return (
     <div className="box ranking">
       <div className="box-header">
-        <h4>Top Students (Study Time)</h4>
+        <h4>Top Students (Points)</h4>
       </div>
 
       {students.length === 0 ? (
         <p className="topic-content-hint">No ranking data yet.</p>
       ) : (
         students.map((s, index) => {
-          const hours = +(s.totalSeconds / 3600).toFixed(1);
           return (
             <div
               key={s._id || s.name}
@@ -44,7 +43,7 @@ function StudentsPreview() {
                 <span className="rank-name">{s.name}</span>
               </div>
 
-              <div className="rank-score">{hours} h</div>
+              <div className="rank-score">{s.points || 0} pts</div>
             </div>
           );
         })

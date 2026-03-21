@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/student/profile.css";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const userId = localStorage.getItem("userId");
 
@@ -33,6 +35,24 @@ export default function Profile() {
     );
 
     window.location.reload();
+  };
+
+  const handleDeleteProfile = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure? This will permanently delete your profile and related data."
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/users/profile/${userId}`, {
+        method: "DELETE"
+      });
+      if (!res.ok) throw new Error("Failed to delete profile");
+      localStorage.clear();
+      navigate("/");
+    } catch (err) {
+      alert("Unable to delete profile right now.");
+    }
   };
 
   if (!user) return <div>Loading...</div>;
@@ -97,6 +117,14 @@ export default function Profile() {
             </div>
           </>
         )}
+
+        <button
+          className="upload-btn"
+          style={{ marginTop: "16px", background: "#fee2e2", color: "#991b1b" }}
+          onClick={handleDeleteProfile}
+        >
+          Delete Profile
+        </button>
 
       </div>
     </div>

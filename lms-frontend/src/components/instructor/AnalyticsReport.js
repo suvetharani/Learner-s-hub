@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 function AnalyticsReport() {
   const [totalStudents, setTotalStudents] = useState(0);
   const [testsCompleted, setTestsCompleted] = useState(0);
+  const [topPoints, setTopPoints] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,18 @@ function AnalyticsReport() {
       } catch {
         // ignore errors, keep defaults
       }
+
+      try {
+        const pointsRes = await fetch(
+          "http://localhost:5000/api/users/points/ranking"
+        );
+        if (pointsRes.ok) {
+          const ranking = await pointsRes.json();
+          setTopPoints(ranking?.[0]?.points || 0);
+        }
+      } catch {
+        // ignore errors
+      }
     };
 
     fetchData();
@@ -48,6 +61,11 @@ function AnalyticsReport() {
         <div className="analytics-card">
           <p>Tests Completed</p>
           <h2>{testsCompleted}</h2>
+        </div>
+
+        <div className="analytics-card">
+          <p>Top Student Points</p>
+          <h2>{topPoints} pts</h2>
         </div>
       </div>
     </div>

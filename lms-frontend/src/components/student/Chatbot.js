@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
-import { FaMinus, FaTimes, FaPlus } from "react-icons/fa";
+import { useState } from "react";
+import { FaMinus, FaTimes } from "react-icons/fa";
 import "../../styles/student/chatbot.css";
 
-export default function Chatbot({ onClose, asPage = false }) {
+export default function Chatbot({ onClose }) {
   const [minimized, setMinimized] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -12,21 +12,11 @@ export default function Chatbot({ onClose, asPage = false }) {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [fileInfo, setFileInfo] = useState(null);
-  const [fileContext, setFileContext] = useState("");
-  const fileInputRef = useRef(null);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
 
-    const baseQuestion = input.trim();
-
-    const enrichedText =
-      fileContext && fileInfo
-        ? `Here is context from an uploaded file named "${fileInfo.name}". Use it to answer the question.\n\n--- File content (may be truncated) ---\n${fileContext}\n\n--- Question ---\n${baseQuestion}`
-        : baseQuestion;
-
-    const userMessage = { from: "user", text: baseQuestion };
+    const userMessage = { from: "user", text: input.trim() };
     const current = [...messages, userMessage];
 
     setMessages(current);
@@ -39,9 +29,7 @@ export default function Chatbot({ onClose, asPage = false }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messages: [...current, { from: "user", text: enrichedText }],
-        }),
+        body: JSON.stringify({ messages: current }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -71,66 +59,16 @@ export default function Chatbot({ onClose, asPage = false }) {
     }
   };
 
-  const handleFileClick = () => {
-    if (fileInputRef.current) fileInputRef.current.click();
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = typeof reader.result === "string" ? reader.result : "";
-      // keep it reasonably small
-      const trimmed = text.slice(0, 8000);
-      setFileInfo({ name: file.name, size: file.size });
-      setFileContext(trimmed);
-      setMessages((prev) => [
-        ...prev,
-        {
-          from: "bot",
-          text: `I have loaded the file "${file.name}". You can now ask doubts about its content.`,
-        },
-      ]);
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
-
-  const renderText = (text) => {
-    const blocks = text.split(/\n\n+/);
-    return blocks.map((block, i) => {
-      const lines = block.split("\n");
-      return (
-        <p key={i} style={{ margin: "4px 0", lineHeight: 1.5 }}>
-          {lines.map((line, j) => (
-            <span key={j}>
-              {line}
-              {j < lines.length - 1 && <br />}
-            </span>
-          ))}
-        </p>
-      );
-    });
-  };
-
-  const containerClass = `chatbot ${minimized ? "mini" : ""} ${
-    asPage ? "chatbot-page" : ""
-  }`;
-
   return (
-    <div className={containerClass}>
+    <div className={`chatbot ${minimized ? "mini" : ""}`}>
       {/* HEADER */}
       <div className="chatbot-header">
         <span>AI Assistant</span>
 
-        {!asPage && (
-          <div className="actions">
-            <FaMinus onClick={() => setMinimized(!minimized)} />
-            <FaTimes onClick={onClose} />
-          </div>
-        )}
+        <div className="actions">
+          <FaMinus onClick={() => setMinimized(!minimized)} />
+          <FaTimes onClick={onClose} />
+        </div>
       </div>
 
       {/* BODY */}
@@ -139,7 +77,7 @@ export default function Chatbot({ onClose, asPage = false }) {
           <div className="chatbot-body">
             {messages.map((m, i) => (
               <div key={i} className={`msg ${m.from}`}>
-                {renderText(m.text)}
+                {m.text}
               </div>
             ))}
             {loading && (
@@ -151,20 +89,6 @@ export default function Chatbot({ onClose, asPage = false }) {
 
           {/* INPUT */}
           <div className="chatbot-input">
-            <button
-              type="button"
-              className="chatbot-plus"
-              onClick={handleFileClick}
-              disabled={loading}
-            >
-              <FaPlus />
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
             <input
               placeholder="Type message..."
               value={input}

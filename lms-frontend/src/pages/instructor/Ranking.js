@@ -9,7 +9,7 @@ export default function Ranking() {
     const fetchRanking = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/users/studytime/ranking"
+          "http://localhost:5000/api/users/points/ranking"
         );
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
@@ -32,13 +32,12 @@ export default function Ranking() {
       {loading && <p className="topic-content-hint">Loading ranking...</p>}
 
       {!loading && !students.length && (
-        <p className="empty">No study time data available yet.</p>
+        <p className="empty">No points data available yet.</p>
       )}
 
       {!loading && students.length > 0 && (
         <div className="ranking-list">
           {students.map((s, i) => {
-            const hours = +(s.totalSeconds / 3600).toFixed(1);
             return (
               <div
                 key={s._id || s.name}
@@ -52,7 +51,7 @@ export default function Ranking() {
                   <h4>{s.name}</h4>
                 </div>
 
-                <div className="points">{hours} h</div>
+                <div className="points">{s.points || 0} pts</div>
               </div>
             );
           })}

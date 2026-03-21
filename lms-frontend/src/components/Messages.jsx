@@ -9,7 +9,7 @@ export default function Messages() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [image, setImage] = useState(null);
+  const [attachment, setAttachment] = useState(null);
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const fileInputRef = useRef();
@@ -67,13 +67,13 @@ export default function Messages() {
 
   /* ================= SEND MESSAGE ================= */
   const sendMessage = async () => {
-    if (!message.trim() && !image) return;
+    if (!message.trim() && !attachment) return;
 
     const formData = new FormData();
     formData.append("senderId", currentUser._id);
     formData.append("receiverId", selectedUser._id);
     formData.append("text", message);
-    if (image) formData.append("image", image);
+    if (attachment) formData.append("file", attachment);
 
     const res = await fetch("http://localhost:5000/api/messages/send", {
       method: "POST",
@@ -94,7 +94,7 @@ if (socket.current) {
 }
 
     setMessage("");
-    setImage(null);
+    setAttachment(null);
   };
 
   /* ================= DELETE SINGLE MESSAGE ================= */
@@ -169,6 +169,17 @@ if (socket.current) {
                     className="chat-image"
                   />
                 )}
+                {msg.file && !msg.image && (
+                  <a
+                    href={`http://localhost:5000/${msg.file}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    download={msg.fileName || true}
+                    className="file-link"
+                  >
+                    {msg.fileName || "Download file"}
+                  </a>
+                )}
 
                 <FaTrash
                   className="delete-icon"
@@ -189,7 +200,7 @@ if (socket.current) {
               type="file"
               hidden
               ref={fileInputRef}
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => setAttachment(e.target.files[0])}
             />
 
             <input
@@ -202,13 +213,17 @@ if (socket.current) {
           </div>
 
           {/* IMAGE PREVIEW BEFORE SEND */}
-          {image && (
+          {attachment && (
             <div className="image-preview">
-              <img
-                src={URL.createObjectURL(image)}
-                alt="preview"
-                className="chat-image"
-              />
+              {attachment.type.startsWith("image/") ? (
+                <img
+                  src={URL.createObjectURL(attachment)}
+                  alt="preview"
+                  className="chat-image"
+                />
+              ) : (
+                <p>{attachment.name}</p>
+              )}
             </div>
           )}
         </div>

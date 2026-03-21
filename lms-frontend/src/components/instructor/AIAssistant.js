@@ -33,7 +33,6 @@ function AIAssistant() {
     setInput("");
     setLoading(true);
 
-    // Try instructor-specific endpoint first, then fall back to student-chat if it fails
     try {
       const res = await fetch(
         "http://localhost:5000/api/ai/instructor-chat",
@@ -61,39 +60,13 @@ function AIAssistant() {
       setMessages((prev) => [...prev, { from: "bot", text: replyText }]);
     } catch (err) {
       console.error("AI assistant error:", err);
-      // Fallback: use the student tutor endpoint so instructor still gets help
-      try {
-        const res2 = await fetch(
-          "http://localhost:5000/api/ai/student-chat",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ messages: current }),
-          }
-        );
-        const data2 = await res2.json().catch(() => ({}));
-        if (!res2.ok) {
-          const msg2 =
-            data2?.message ||
-            "AI is temporarily unavailable. Please try again later.";
-          throw new Error(msg2);
-        }
-        const replyText2 =
-          data2.reply ||
-          "I'm having trouble generating a response right now. Please try again.";
-        setMessages((prev) => [...prev, { from: "bot", text: replyText2 }]);
-      } catch (fallbackErr) {
-        console.error("AI assistant fallback error:", fallbackErr);
-        setMessages((prev) => [
-          ...prev,
-          {
-            from: "bot",
-            text: fallbackErr.message,
-          },
-        ]);
-      }
+      setMessages((prev) => [
+        ...prev,
+        {
+          from: "bot",
+          text: err.message,
+        },
+      ]);
     } finally {
       setLoading(false);
     }
