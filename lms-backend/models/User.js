@@ -73,6 +73,37 @@ const userSchema = new mongoose.Schema(
           }
         }
       ]
+    },
+
+    learning: {
+      readTopicIds: {
+        type: [String],
+        default: []
+      },
+      completedCourseIds: {
+        type: [String],
+        default: []
+      },
+      totalPoints: {
+        type: Number,
+        default: 0
+      },
+      recentCourses: [
+        {
+          id: String,
+          name: String,
+          domain: String,
+          progress: Number,
+          points: Number,
+          lastAccessed: Date
+        }
+      ]
+    },
+    notifications: {
+      lastSeenAt: {
+        type: Date,
+        default: Date.now
+      }
     }
   },
   { timestamps: true }

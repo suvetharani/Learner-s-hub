@@ -211,12 +211,17 @@ router.post("/submit", async (req, res) => {
   try {
 
     const { studentId, testId, answers, terminated } = req.body;
+    if (!studentId || !testId) {
+      return res.status(400).json({
+        message: "studentId and testId are required"
+      });
+    }
 
     const result = new ExamResult({
       student: studentId,
       test: testId,
-      answers: answers,
-      terminated: terminated
+      answers: Array.isArray(answers) ? answers : [],
+      terminated: Boolean(terminated)
     });
 
     await result.save();

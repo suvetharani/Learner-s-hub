@@ -4,36 +4,42 @@ const Violation = require("../models/Violation");
 const User = require("../models/User");
 
 router.post("/", async (req, res) => {
-
-  const { student, test, type } = req.body;
-
-  let studentSnapshot = undefined;
   try {
-    if (student) {
-      const user = await User.findById(student).select("name email rollNumber").lean();
-      if (user) {
-        studentSnapshot = {
-          name: user.name,
-          email: user.email,
-          rollNumber: user.rollNumber
-        };
-      }
+    const { student, test, type } = req.body;
+
+    if (!student || !test || !type) {
+      return res.status(400).json({ message: "student, test and type are required" });
     }
-  } catch (e) {
-    // Don't block violation recording if snapshot lookup fails
+
+    let studentSnapshot = undefined;
+    try {
+      if (student) {
+        const user = await User.findById(student).select("name email rollNumber").lean();
+        if (user) {
+          studentSnapshot = {
+            name: user.name,
+            email: user.email,
+            rollNumber: user.rollNumber
+          };
+        }
+      }
+    } catch (e) {
+      // Don't block violation recording if snapshot lookup fails
+    }
+
+    const violation = new Violation({
+      student,
+      studentSnapshot,
+      test,
+      type
+    });
+
+    await violation.save();
+
+    res.json({ message: "Violation recorded" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-
-  const violation = new Violation({
-    student,
-    studentSnapshot,
-    test,
-    type
-  });
-
-  await violation.save();
-
-  res.json({ message: "Violation recorded" });
-
 });
 
 module.exports = router;

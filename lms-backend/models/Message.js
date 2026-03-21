@@ -18,6 +18,15 @@ const messageSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    file: {
+      type: String,
+    },
+    fileName: {
+      type: String,
+    },
+    fileMimeType: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

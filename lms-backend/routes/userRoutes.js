@@ -9,6 +9,14 @@ const {
   trackStudyTime,
   getMyStudyTime,
   getStudyRanking,
+  getCourseProgress,
+  trackCourseTopic,
+  getPointsRanking,
+  updateRecentCourse,
+  getRecentCourses,
+  deleteProfile,
+  getStudentNotifications,
+  getInstructorNotifications,
 } = require("../controllers/userController");
 
 
@@ -54,6 +62,8 @@ router.get("/profile/:id", async (req, res) => {
   }
 });
 
+router.delete("/profile/:id", deleteProfile);
+
 // Upload profile image
 router.put("/profile/image/:id", upload.single("image"), async (req, res) => {
   try {
@@ -86,5 +96,12 @@ router.get("/all", async (req, res) => {
 router.post("/studytime/track", trackStudyTime);
 router.get("/studytime/me/:id", getMyStudyTime);
 router.get("/studytime/ranking", getStudyRanking);
+router.get("/course-progress/:id", getCourseProgress);
+router.post("/course-progress/track", trackCourseTopic);
+router.get("/points/ranking", getPointsRanking);
+router.post("/recent-courses/track", updateRecentCourse);
+router.get("/recent-courses/:id", getRecentCourses);
+router.get("/notifications/student/:id", getStudentNotifications);
+router.get("/notifications/instructor/:id", getInstructorNotifications);
 
 module.exports = router;

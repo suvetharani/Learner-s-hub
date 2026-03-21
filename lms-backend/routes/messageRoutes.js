@@ -13,15 +13,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* SEND MESSAGE */
-router.post("/send", upload.single("image"), async (req, res) => {
+router.post("/send", upload.single("file"), async (req, res) => {
   try {
     const { senderId, receiverId, text } = req.body;
+    const uploadedFilePath = req.file ? "uploads/" + req.file.filename : null;
+    const isImage = req.file?.mimetype?.startsWith("image/");
 
     const message = new Message({
       sender: senderId,
       receiver: receiverId,
       text,
-      image: req.file ? "uploads/" + req.file.filename : null,
+      image: isImage ? uploadedFilePath : null,
+      file: uploadedFilePath,
+      fileName: req.file ? req.file.originalname : null,
+      fileMimeType: req.file ? req.file.mimetype : null,
     });
 
     await message.save();
