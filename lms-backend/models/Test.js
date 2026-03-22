@@ -4,6 +4,9 @@ const questionSchema = new mongoose.Schema({
   questionText: String,
   type: String,
   required: Boolean,
+  correctAnswer: String,
+  points: Number,
+  duration: Number,
   options: [String],
 });
 
