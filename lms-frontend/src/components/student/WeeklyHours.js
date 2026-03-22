@@ -130,16 +130,14 @@ function WeeklyHours() {
           <p className="topic-content-hint">Loading study time...</p>
         ) : (
           daysConfig.map(({ label }, i) => (
-            <div key={i} className="bar-group">
+            <div key={i} className="bar-group" title={formatDuration(minutesData[i])}>
               <div className="bar-track">
                 <div
                   className="bar-fill"
                   style={{ height: `${(minutesData[i] / max) * 100}%` }}
-                >
-                  <span className="tooltip">{formatDuration(minutesData[i])}</span>
-                </div>
+                />
               </div>
-
+              <span className="bar-tooltip">{formatDuration(minutesData[i])}</span>
               <div className="day-label">{label}</div>
             </div>
           ))

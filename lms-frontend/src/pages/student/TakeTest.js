@@ -10,7 +10,7 @@ export default function TakeTest() {
   useEffect(() => {
     const fetchTests = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tests/all");
+        const res = await fetch("http://localhost:5000/api/tests/all?forStudent=true");
         const data = await res.json();
         setTests(data);
       } catch (error) {
@@ -58,12 +58,15 @@ export default function TakeTest() {
         {tests.length === 0 ? (
           <p>No tests available.</p>
         ) : (
-          tests.map((test) => (
+          tests.map((test) => {
+            const totalPoints = test.questions?.reduce((s, q) => s + (q.points || 5), 0) ?? test.totalMarks ?? 0;
+            const totalDuration = test.questions?.reduce((s, q) => s + (q.duration || 0), 0) || test.duration;
+            return (
             <div key={test._id} className="test-card">
               <h3>{test.title}</h3>
               <p>{test.description}</p>
-              <p><strong>Duration:</strong> {test.duration} mins</p>
-              <p><strong>Total Marks:</strong> {test.totalMarks}</p>
+              <p><strong>Duration:</strong> {totalDuration || test.duration || 30} mins</p>
+              <p><strong>Total Points:</strong> {totalPoints}</p>
               <p><strong>Instructor:</strong> {test.instructor?.name}</p>
 
               <button
@@ -74,7 +77,8 @@ export default function TakeTest() {
                 Start Test
               </button>
             </div>
-          ))
+          );
+          })
         )}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/student/courses.css";
 
 // Static course structure (topics map to local .txt content files inside public/courses)
@@ -117,11 +117,25 @@ const RECENT_COURSES_KEY = "recentCourses";
 
 export default function BasicComputerCourses() {
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = localStorage.getItem("userId");
 
   const [openDomain, setOpenDomain] = useState({});
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [domains] = useState(domainConfig);
+
+  // Open course when navigating from CurrentCourses arrow
+  useEffect(() => {
+    const state = location.state;
+    if (state?.openCourse && state?.openDomainTitle) {
+      setSelectedCourse(state.openCourse);
+      const domainIndex = domainConfig.findIndex((d) => d.title === state.openDomainTitle);
+      if (domainIndex >= 0) {
+        setOpenDomain((prev) => ({ ...prev, [domainIndex]: true }));
+      }
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state?.openCourseId]);
   const [readTopicIds, setReadTopicIds] = useState([]);
   const [completedCourseIds, setCompletedCourseIds] = useState([]);
 

@@ -581,8 +581,8 @@ body {
   position: relative;   /* ⭐ important */
 }
 
-/* tooltip */
-.tooltip {
+/* tooltip - show on bar-group hover so even tiny bars are hoverable */
+.bar-tooltip {
   position: absolute;
   top: -28px;
   left: 50%;
@@ -596,9 +596,13 @@ body {
   pointer-events: none;
   white-space: nowrap;
   transition: opacity 0.2s ease;
+  z-index: 10;
 }
 
-/* show on hover */
-.bar-fill:hover .tooltip {
+.bar-group {
+  position: relative;
+}
+
+.bar-group:hover .bar-tooltip {
   opacity: 1;
 }

@@ -47,26 +47,30 @@ const terminateExam = async () => {
   if (terminatedRef.current) return;
   terminatedRef.current = true;
 
-  await fetch("http://localhost:5000/api/tests/submit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      studentId,
-      testId: id,
-      answers: Object.entries(answers).map(([qIndex, ans]) => ({
-        questionIndex: Number(qIndex),
-        answer: ans
-      })),
-      terminated: true
-    })
-  });
+  try {
+    const res = await fetch("http://localhost:5000/api/tests/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studentId,
+        testId: id,
+        answers: Object.entries(answers).map(([qIndex, ans]) => ({
+          questionIndex: Number(qIndex),
+          answer: ans
+        })),
+        terminated: true
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error("Submit failed:", err);
+    }
+  } catch (e) {
+    console.error("Submit error:", e);
+  }
 
   alert("Exam terminated due to violation");
-
   navigate("/student/tests");
-
 };
 
 const handleViolation = async (type) => {
@@ -110,19 +114,20 @@ const handleViolation = async (type) => {
   });
 
   try {
-    await fetch("http://localhost:5000/api/violations", {
+    const res = await fetch("http://localhost:5000/api/violations", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         student: studentId,
         test: id,
         type: type
       })
     });
+    if (!res.ok) {
+      console.error("Violation save failed:", await res.text());
+    }
   } catch (e) {
-    // Avoid blocking the exam UI if violation logging fails
+    console.error("Violation error:", e);
   }
 };
 handleViolationRef.current = handleViolation;
@@ -226,7 +231,7 @@ const fetchTest = async () => {
 
   try {
 
-    const res = await fetch(`http://localhost:5000/api/tests/${id}`);
+    const res = await fetch(`http://localhost:5000/api/tests/${id}?forStudent=true`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch test (${res.status})`);
@@ -302,30 +307,37 @@ useEffect(() => {
   /* SUBMIT EXAM */
 
 const submitExam = async () => {
-
   const confirmSubmit = window.confirm("Are you sure you want to submit the exam?");
   if (!confirmSubmit) return;
 
-  await fetch("http://localhost:5000/api/tests/submit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      studentId,
-      testId: id,
-      answers: Object.entries(answers).map(([qIndex, ans]) => ({
-  questionIndex: Number(qIndex),
-  answer: ans
-})),
-      terminated:false
-    })
-  });
+  try {
+    const res = await fetch("http://localhost:5000/api/tests/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studentId,
+        testId: id,
+        answers: Object.entries(answers).map(([qIndex, ans]) => ({
+          questionIndex: Number(qIndex),
+          answer: ans
+        })),
+        terminated: false
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert("Failed to submit. Please try again.");
+      console.error("Submit failed:", err);
+      return;
+    }
+  } catch (e) {
+    alert("Network error. Please check your connection and try again.");
+    console.error("Submit error:", e);
+    return;
+  }
 
   alert("Exam submitted successfully");
-
   navigate("/student/tests");
-
 };
 
   if (questions.length === 0) return <p>Loading exam...</p>;
@@ -461,6 +473,13 @@ return (
         >
           <h4 style={{ marginTop: 0 }}>
             {current + 1}. {q.questionText}
+            {(q.points || q.duration) && (
+              <span style={{ fontSize: 12, fontWeight: 400, color: "#6b7280", marginLeft: 8 }}>
+                {q.points ? `${q.points} pts` : ""}
+                {q.points && q.duration ? " · " : ""}
+                {q.duration ? `${q.duration} min` : ""}
+              </span>
+            )}
           </h4>
 
         {/* MULTIPLE CHOICE */}

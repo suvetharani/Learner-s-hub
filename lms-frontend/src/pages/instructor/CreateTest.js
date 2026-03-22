@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Check, X } from "lucide-react";
 import "../../styles/instructor/test.css";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,6 +21,9 @@ export default function CreateTest() {
       questionText: "",
       type: "short",
       required: false,
+      correctAnswer: "",
+      points: 5,
+      duration: 2,
       options: ["Option 1"],
     },
   ]);
@@ -47,10 +50,13 @@ export default function CreateTest() {
 
 setQuestions(
   data.questions.map((q, index) => ({
-    id: q._id || index + 1, // fallback id
+    id: q._id || index + 1,
     questionText: q.questionText || "",
     type: q.type || "short",
     required: q.required || false,
+    correctAnswer: q.correctAnswer || "",
+    points: q.points ?? 5,
+    duration: q.duration ?? 2,
     options: q.options?.length ? q.options : ["Option 1"],
   }))
 );
@@ -65,7 +71,6 @@ setQuestions(
     }
   }, [id]);
 
-  // Add new question
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -74,6 +79,9 @@ setQuestions(
         questionText: "",
         type: "short",
         required: false,
+        correctAnswer: "",
+        points: 5,
+        duration: 2,
         options: ["Option 1"],
       },
     ]);
@@ -105,7 +113,6 @@ setQuestions(
     setQuestions(questions.filter((q) => q.id !== qid));
   };
 
-  // ✅ Save to backend
   const handleSave = async () => {
     const confirmSave = window.confirm(
       "Are you sure you want to finish and save this test?"
@@ -121,26 +128,22 @@ setQuestions(
       title: formTitle || "Untitled Test",
       description: formDescription || "",
       duration: Number(duration) || 30,
-      totalMarks:
-        Number(totalMarks) || questions.length * 5,
+      totalMarks: Number(totalMarks) || questions.reduce((s, q) => s + (q.points || 5), 0),
       questions: questions.map(({ id, ...rest }) => rest),
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/tests",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(testData),
-        }
-      );
+      const url = id
+        ? `http://localhost:5000/api/tests/${id}`
+        : "http://localhost:5000/api/tests";
+      const method = id ? "PUT" : "POST";
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(testData),
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to save test");
-      }
+      if (!response.ok) throw new Error("Failed to save test");
 
       navigate("/instructor/test");
     } catch (error) {
@@ -290,23 +293,66 @@ setQuestions(
               )}
 
               <div className="question-bottom">
-                <label>
-                  Required
+                <label style={{ display: "block", marginBottom: 8 }}>
+                  Correct Answer (hidden from students)
                   <input
-                    type="checkbox"
-                    checked={q.required}
+                    type="text"
+                    className="preview-input"
+                    placeholder="Expected answer"
+                    value={q.correctAnswer || ""}
                     disabled={isViewMode}
                     onChange={(e) =>
-                      updateQuestion(q.id, "required", e.target.checked)
+                      updateQuestion(q.id, "correctAnswer", e.target.value)
                     }
                   />
                 </label>
-
+                <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+                  <label>
+                    Points
+                    <input
+                      type="number"
+                      min="1"
+                      max="100"
+                      style={{ width: 60, marginLeft: 6 }}
+                      value={q.points ?? 5}
+                      disabled={isViewMode}
+                      onChange={(e) =>
+                        updateQuestion(q.id, "points", Number(e.target.value) || 5)
+                      }
+                    />
+                  </label>
+                  <label>
+                    Duration (min)
+                    <input
+                      type="number"
+                      min="1"
+                      max="60"
+                      style={{ width: 60, marginLeft: 6 }}
+                      value={q.duration ?? 2}
+                      disabled={isViewMode}
+                      onChange={(e) =>
+                        updateQuestion(q.id, "duration", Number(e.target.value) || 2)
+                      }
+                    />
+                  </label>
+                  <label>
+                    Required
+                    <input
+                      type="checkbox"
+                      checked={q.required}
+                      disabled={isViewMode}
+                      onChange={(e) =>
+                        updateQuestion(q.id, "required", e.target.checked)
+                      }
+                    />
+                  </label>
+                </div>
                 {!isViewMode && (
                   <Trash2
                     size={18}
                     className="delete-icon"
                     onClick={() => deleteQuestion(q.id)}
+                    style={{ marginTop: 8 }}
                   />
                 )}
               </div>
@@ -402,6 +448,13 @@ function ResponsesTab({ testId, questions }) {
                 <h4 style={{ marginBottom: 6 }}>Answers</h4>
                 {r.answers.map((a) => {
                   const q = questions[a.questionIndex];
+                  const correct = q?.correctAnswer != null && q.correctAnswer !== "";
+                  const studentAns = String(a.answer || "").trim().toLowerCase();
+                  const expectedAns = String(q?.correctAnswer || "").trim().toLowerCase();
+                  const isCorrect = correct && (
+                    studentAns === expectedAns ||
+                    (q?.type === "mcq" && expectedAns.length <= 3 && studentAns.includes(expectedAns))
+                  );
                   return (
                     <div
                       key={a.questionIndex}
@@ -411,14 +464,31 @@ function ResponsesTab({ testId, questions }) {
                         borderRadius: 8,
                         background: "#f9fafb",
                         border: "1px solid #e5e7eb",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 8,
                       }}
                     >
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>
-                        Q{a.questionIndex + 1}: {q?.questionText || ""}
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600 }}>
+                          Q{a.questionIndex + 1}: {q?.questionText || ""}
+                        </div>
+                        <div style={{ fontSize: 13, marginTop: 4 }}>
+                          {a.answer}
+                        </div>
+                        {correct && (
+                          <div style={{ fontSize: 12, marginTop: 4, color: "#6b7280" }}>
+                            Correct: {q.correctAnswer}
+                          </div>
+                        )}
                       </div>
-                      <div style={{ fontSize: 13, marginTop: 4 }}>
-                        {a.answer}
-                      </div>
+                      {correct && (
+                        isCorrect ? (
+                          <Check size={20} color="#22c55e" style={{ flexShrink: 0 }} />
+                        ) : (
+                          <X size={20} color="#ef4444" style={{ flexShrink: 0 }} />
+                        )
+                      )}
                     </div>
                   );
                 })}
