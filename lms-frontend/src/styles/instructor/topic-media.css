@@ -1,0 +1,163 @@
+.topic-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topic-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.topic-upload-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.topic-upload-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.topic-media-section {
+  margin-top: 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.topic-media-section h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.topic-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.topic-media-item {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.topic-media-item img,
+.topic-media-item video {
+  width: 100%;
+  display: block;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.topic-media-item video {
+  max-height: 240px;
+  background: #000;
+}
+
+.topic-media-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.topic-media-delete {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.topic-media-delete:hover {
+  color: #dc2626;
+}
+
+/* Fullscreen button (student view) */
+.topic-media-preview-wrap {
+  position: relative;
+}
+
+.topic-media-fullscreen-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.topic-media-fullscreen-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.topic-media-meta-student .topic-media-fullscreen-btn {
+  display: none;
+}
+
+/* Student view: meta without delete */
+.topic-media-meta-student {
+  padding: 8px 12px;
+}
+
+/* Fullscreen overlay for images */
+.topic-media-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.topic-media-fullscreen-overlay img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  cursor: default;
+}
+
+.topic-media-close-fullscreen {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topic-media-close-fullscreen:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

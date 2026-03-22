@@ -22,8 +22,6 @@ export default function CreateTest() {
       type: "short",
       required: false,
       correctAnswer: "",
-      points: 5,
-      duration: 2,
       options: ["Option 1"],
     },
   ]);
@@ -55,8 +53,6 @@ setQuestions(
     type: q.type || "short",
     required: q.required || false,
     correctAnswer: q.correctAnswer || "",
-    points: q.points ?? 5,
-    duration: q.duration ?? 2,
     options: q.options?.length ? q.options : ["Option 1"],
   }))
 );
@@ -80,8 +76,6 @@ setQuestions(
         type: "short",
         required: false,
         correctAnswer: "",
-        points: 5,
-        duration: 2,
         options: ["Option 1"],
       },
     ]);
@@ -128,8 +122,8 @@ setQuestions(
       title: formTitle || "Untitled Test",
       description: formDescription || "",
       duration: Number(duration) || 30,
-      totalMarks: Number(totalMarks) || questions.reduce((s, q) => s + (q.points || 5), 0),
-      questions: questions.map(({ id, ...rest }) => rest),
+      totalMarks: Number(totalMarks) || questions.length * 5,
+      questions: questions.map(({ id, points, duration: qDur, ...rest }) => rest),
     };
 
     try {
@@ -308,34 +302,6 @@ setQuestions(
                 </label>
                 <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
                   <label>
-                    Points
-                    <input
-                      type="number"
-                      min="1"
-                      max="100"
-                      style={{ width: 60, marginLeft: 6 }}
-                      value={q.points ?? 5}
-                      disabled={isViewMode}
-                      onChange={(e) =>
-                        updateQuestion(q.id, "points", Number(e.target.value) || 5)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Duration (min)
-                    <input
-                      type="number"
-                      min="1"
-                      max="60"
-                      style={{ width: 60, marginLeft: 6 }}
-                      value={q.duration ?? 2}
-                      disabled={isViewMode}
-                      onChange={(e) =>
-                        updateQuestion(q.id, "duration", Number(e.target.value) || 2)
-                      }
-                    />
-                  </label>
-                  <label>
                     Required
                     <input
                       type="checkbox"
@@ -495,9 +461,9 @@ function ResponsesTab({ testId, questions }) {
               </div>
 
               <div style={{ marginTop: 10 }}>
-                <h4 style={{ marginBottom: 6 }}>Violations</h4>
+                <h4 style={{ marginBottom: 6 }}>Violations (this test only)</h4>
                 {(!r.violations || r.violations.length === 0) && (
-                  <p style={{ fontSize: 13 }}>No violations recorded.</p>
+                  <p style={{ fontSize: 13 }}>No violations recorded for this test.</p>
                 )}
                 {r.violations &&
                   r.violations.map((v) => (

@@ -11,6 +11,7 @@ import {
   FaPlus,
   FaClipboardList,
   FaSignOutAlt,
+  FaPlayCircle,
 } from "react-icons/fa";
 
 const items = [
@@ -18,6 +19,7 @@ const items = [
   { name: "academics", label: "Academics", icon: <FaBook /> },
   { name: "instructors", label: "Instructors", icon: <FaChalkboardTeacher /> },
   { name: "classroom", label: "Classroom", icon: <FaDoorOpen /> },
+  { name: "courses", label: "Courses", icon: <FaPlayCircle /> },
   { name: "course-creation", label: "Course Creation", icon: <FaClipboardList /> },
   { name: "test", label: "Test Creation", icon: <FaClipboardList /> },
   { name: "messages", label: "Messages", icon: <FaEnvelope /> },

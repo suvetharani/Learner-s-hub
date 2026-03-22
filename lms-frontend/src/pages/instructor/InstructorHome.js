@@ -29,6 +29,8 @@ import StudentProfile from "./StudentProfile";
 import CourseDetails from "./CourseDetails";
 import TestPage from "./TestPage";
 import CreateTest from "./CreateTest";
+import InstructorCourses from "./InstructorCourses";
+import InstructorCourseTopicPage from "./InstructorCourseTopicPage";
 
 /* ✅ NEW BOXES */
 import StudentsPreview from "../../components/instructor/StudentsPreview";
@@ -72,6 +74,8 @@ function InstructorHome() {
           <Route path="academics" element={<Academics />} />
           <Route path="instructors" element={<Instructors />} />
           <Route path="classroom" element={<Classroom />} />
+          <Route path="courses" element={<InstructorCourses />} />
+          <Route path="courses/topic/:courseId/:topicId" element={<InstructorCourseTopicPage />} />
           <Route path="course-creation" element={<CourseCreation />} />
           <Route path="messages" element={<MessagePage />} />
           <Route path="notes" element={<Notes />} />

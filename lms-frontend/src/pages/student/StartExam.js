@@ -473,13 +473,6 @@ return (
         >
           <h4 style={{ marginTop: 0 }}>
             {current + 1}. {q.questionText}
-            {(q.points || q.duration) && (
-              <span style={{ fontSize: 12, fontWeight: 400, color: "#6b7280", marginLeft: 8 }}>
-                {q.points ? `${q.points} pts` : ""}
-                {q.points && q.duration ? " · " : ""}
-                {q.duration ? `${q.duration} min` : ""}
-              </span>
-            )}
           </h4>
 
         {/* MULTIPLE CHOICE */}

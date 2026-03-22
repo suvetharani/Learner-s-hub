@@ -58,15 +58,12 @@ export default function TakeTest() {
         {tests.length === 0 ? (
           <p>No tests available.</p>
         ) : (
-          tests.map((test) => {
-            const totalPoints = test.questions?.reduce((s, q) => s + (q.points || 5), 0) ?? test.totalMarks ?? 0;
-            const totalDuration = test.questions?.reduce((s, q) => s + (q.duration || 0), 0) || test.duration;
-            return (
+          tests.map((test) => (
             <div key={test._id} className="test-card">
               <h3>{test.title}</h3>
               <p>{test.description}</p>
-              <p><strong>Duration:</strong> {totalDuration || test.duration || 30} mins</p>
-              <p><strong>Total Points:</strong> {totalPoints}</p>
+              <p><strong>Duration:</strong> {test.duration || 30} mins</p>
+              <p><strong>Total Marks:</strong> {test.totalMarks ?? 0}</p>
               <p><strong>Instructor:</strong> {test.instructor?.name}</p>
 
               <button
@@ -77,8 +74,7 @@ export default function TakeTest() {
                 Start Test
               </button>
             </div>
-          );
-          })
+          ))
         )}
       </div>
     </div>
