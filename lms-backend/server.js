@@ -14,6 +14,7 @@ const testRoutes = require("./routes/testRoutes");
 const violationRoutes = require("./routes/violationRoutes");
 const academicRoutes = require("./routes/academicRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const topicMediaRoutes = require("./routes/topicMediaRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +35,7 @@ app.use("/api/tests", testRoutes);
 app.use("/api/academics", academicRoutes);
 app.use("/api/violations", violationRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/topic-media", topicMediaRoutes);
 
 app.use("/uploads", express.static("uploads"));
 
