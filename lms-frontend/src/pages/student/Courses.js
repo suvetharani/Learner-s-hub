@@ -4,6 +4,11 @@ import { domainConfig } from "../../config/domainConfig";
 import "../../styles/student/courses.css";
 
 const RECENT_COURSES_KEY = "recentCourses";
+const RAW_API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const trimmedApiBase = String(RAW_API_BASE || "").replace(/\/+$/, "");
+const API = trimmedApiBase.endsWith("/api")
+  ? trimmedApiBase
+  : `${trimmedApiBase}/api`;
 
 export default function BasicComputerCourses() {
   const navigate = useNavigate();
@@ -38,9 +43,7 @@ export default function BasicComputerCourses() {
     if (!userId) return;
     const loadProgress = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/users/course-progress/${userId}`
-        );
+        const res = await fetch(`${API}/users/course-progress/${userId}`);
         const data = await res.json();
         if (res.ok) {
           setReadTopicIds(data.readTopicIds || []);
@@ -50,7 +53,14 @@ export default function BasicComputerCourses() {
         // ignore errors and keep default states
       }
     };
+
     loadProgress();
+
+    const onProgress = () => {
+      loadProgress();
+    };
+    window.addEventListener("courseProgressUpdated", onProgress);
+    return () => window.removeEventListener("courseProgressUpdated", onProgress);
   }, [userId]);
 
   const getCourseById = (courseId) => {
@@ -111,7 +121,7 @@ export default function BasicComputerCourses() {
       window.dispatchEvent(new Event("recentCoursesUpdated"));
 
       if (userId) {
-        fetch("http://localhost:5000/api/users/recent-courses/track", {
+        fetch(`${API}/users/recent-courses/track`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, course: entry })
@@ -136,44 +146,12 @@ export default function BasicComputerCourses() {
 
   const handleTopicClick = async (courseId, topic) => {
     if (!topic?.filePath) return;
-    const course = getCourseById(courseId);
-
-    const key = `${courseId}:${topic.id}`;
-    const willAddNew = !readTopicIds.includes(key);
-    const nextReadTopicIds = willAddNew ? [...readTopicIds, key] : readTopicIds;
-    setReadTopicIds(nextReadTopicIds);
-
-    if (course?.topics?.length && userId) {
-      const readCount = course.topics.filter((t) =>
-        nextReadTopicIds.includes(`${course.id}:${t.id}`)
-      ).length;
-      const isCompletedNow = readCount === course.topics.length;
-
-      try {
-        const res = await fetch("http://localhost:5000/api/users/course-progress/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId,
-            courseId,
-            topicId: topic.id,
-            coursePoints: course.points || 0,
-            completed: isCompletedNow,
-          })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setReadTopicIds(data.learning?.readTopicIds || nextReadTopicIds);
-          setCompletedCourseIds(data.learning?.completedCourseIds || []);
-        }
-      } catch {
-        // ignore and proceed to topic page
-      }
-    }
 
     const encodedPath = encodeURIComponent(topic.filePath || "");
+    const safeCourse = encodeURIComponent(courseId);
+    const safeTopic = encodeURIComponent(topic.id);
     navigate(
-      `/student/courses/topic/${courseId}/${topic.id}?file=${encodedPath}&title=${encodeURIComponent(topic.title || "")}`,
+      `/student/courses/topic/${safeCourse}/${safeTopic}?file=${encodedPath}&title=${encodeURIComponent(topic.title || "")}`,
       {
         state: {
           topicTitle: topic.title,
@@ -188,8 +166,8 @@ export default function BasicComputerCourses() {
       <div className="courses-header">
         <h2>Explore Courses</h2>
         <p>
-          Expand a domain, pick a course to see its contents, and open full
-          tutorials while keeping your progress tracking.
+          Expand a domain, pick a course to see its contents, then complete each
+          topic (quiz where your instructor added one) to advance your progress.
         </p>
       </div>
 

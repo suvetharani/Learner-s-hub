@@ -34,8 +34,10 @@ export default function InstructorCourses() {
   const handleTopicClick = (courseId, topic) => {
     if (!topic?.filePath) return;
     const encodedPath = encodeURIComponent(topic.filePath || "");
+    const safeCourse = encodeURIComponent(courseId);
+    const safeTopic = encodeURIComponent(topic.id);
     navigate(
-      `/instructor/courses/topic/${courseId}/${topic.id}?file=${encodedPath}&title=${encodeURIComponent(topic.title || "")}`,
+      `/instructor/courses/topic/${safeCourse}/${safeTopic}?file=${encodedPath}&title=${encodeURIComponent(topic.title || "")}`,
       { state: { topicTitle: topic.title, filePath: topic.filePath } }
     );
   };
@@ -46,7 +48,7 @@ export default function InstructorCourses() {
         <h2>Course Materials</h2>
         <p>
           Manage course content. Expand a domain, select a course, and add
-          images or videos (up to 5 mins) to each topic.
+          images or videos (up to 5 mins) plus topic quizzes on each topic page.
         </p>
       </div>
 

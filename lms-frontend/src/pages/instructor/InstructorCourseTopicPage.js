@@ -1,10 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Upload, Trash2 } from "lucide-react";
+import TopicQuizEditor from "../../components/instructor/TopicQuizEditor";
 import "../../styles/student/courses.css";
 import "../../styles/instructor/topic-media.css";
+import "../../styles/student/topic-quiz.css";
 
-const API = "http://localhost:5000/api";
+const RAW_API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const trimmedApiBase = String(RAW_API_BASE || "").replace(/\/+$/, "");
+const API = trimmedApiBase.endsWith("/api")
+  ? trimmedApiBase
+  : `${trimmedApiBase}/api`;
 
 export default function InstructorCourseTopicPage() {
   const { courseId, topicId } = useParams();
@@ -124,7 +130,7 @@ export default function InstructorCourseTopicPage() {
           </p>
           <h1 className="topic-heading">{topicTitle}</h1>
           <p className="topic-subheading">
-            Add images or videos (up to 5 mins) to enrich this topic.
+            Add media and an optional topic quiz below. Students need correct quiz answers (or no quiz) to complete the topic.
           </p>
         </div>
         <div className="topic-hero-actions">
@@ -161,6 +167,8 @@ export default function InstructorCourseTopicPage() {
           </pre>
         )}
       </div>
+
+      <TopicQuizEditor courseId={courseId} topicId={topicId} />
 
       {media.length > 0 && (
         <div className="topic-media-section">

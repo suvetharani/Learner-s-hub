@@ -1,0 +1,257 @@
+.topic-quiz-card {
+  margin-top: 24px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.topic-quiz-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.topic-quiz-lead {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.topic-quiz-hint {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.topic-quiz-question {
+  margin: 0 0 20px;
+  padding: 16px 16px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafafa;
+  min-inline-size: 0;
+}
+
+.topic-quiz-question:last-of-type {
+  margin-bottom: 0;
+}
+
+.topic-quiz-legend {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4f46e5;
+  padding: 0 4px;
+}
+
+.topic-quiz-question-text {
+  margin: 8px 0 10px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #111827;
+}
+
+.topic-quiz-options-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.topic-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.topic-quiz-options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.topic-quiz-options label:hover {
+  border-color: #c7d2fe;
+  background: #f5f3ff;
+}
+
+.topic-quiz-option-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.topic-quiz-options input[type="radio"] {
+  margin-top: 3px;
+}
+
+.topic-quiz-actions {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topic-quiz-submit {
+  padding: 10px 18px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.topic-quiz-submit:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.topic-quiz-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.topic-quiz-msg-pass {
+  color: #059669;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.topic-quiz-msg-fail {
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.topic-quiz-retry-alert {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #7f1d1d;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.topic-quiz-retry-alert strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.topic-quiz-retry-msg {
+  margin: 0;
+}
+
+.topic-quiz-badge-done {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.topic-quiz-editor {
+  margin-top: 28px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.topic-quiz-editor h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.topic-quiz-editor-row {
+  margin-bottom: 16px;
+}
+
+.topic-quiz-editor-row label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.topic-quiz-editor-row input[type="text"],
+.topic-quiz-editor-row textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.topic-quiz-editor-row textarea {
+  min-height: 56px;
+  resize: vertical;
+}
+
+.topic-quiz-q-block {
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: #fafafa;
+}
+
+.topic-quiz-option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.topic-quiz-option-row input {
+  flex: 1;
+}
+
+.topic-quiz-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.topic-quiz-btn-secondary {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.topic-quiz-btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.topic-quiz-btn-danger {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.topic-quiz-empty {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}

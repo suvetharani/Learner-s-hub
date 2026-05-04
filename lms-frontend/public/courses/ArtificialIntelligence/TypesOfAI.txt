@@ -1,0 +1,17 @@
+Types of Artificial Intelligence
+
+a) Narrow AI (Weak AI)
+
+* Designed for a specific task
+* Most common type of AI today
+Example: Chatbots, recommendation systems
+
+b) General AI (Strong AI)
+
+* Can perform any task like a human
+* Still under development
+
+c) Superintelligent AI
+
+* More intelligent than humans
+* Theoretical and not yet developed

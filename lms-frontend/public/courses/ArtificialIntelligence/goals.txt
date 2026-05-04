@@ -1,0 +1,8 @@
+The main goals of AI are:
+* To create machines that can think and learn like humans
+* To automate repetitive and complex tasks
+* To improve decision-making using data
+* To solve real-world problems efficiently
+
+Example:
+- AI systems in self-driving cars and medical diagnosis.

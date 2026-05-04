@@ -11,7 +11,9 @@ const domainConfig = [
   { title: "Artificial Intelligence", courses: [
     { id: "intro-ai", name: "Introduction to AI", points: 10, topics: [
       { id: "whatisai", title: "What is AI?", filePath: "/courses/ArtificialIntelligence/whatisAI.txt" },
+      { id: "History of AI", title: "History Of AI", filePath: "/courses/ArtificialIntelligence/History of AI.txt" },
       { id: "ai-applications", title: "AI Applications", filePath: "/courses/ArtificialIntelligence/aiApplications.txt" },
+      
     ]},
     { id: "ml-basics", name: "Machine Learning Basics", points: 5, topics: [] },
     { id: "nn-basics", name: "Neural Networks", points: 5, topics: [] },

@@ -9,6 +9,10 @@ export const domainConfig = [
         points: 10,
         topics: [
           { id: "whatisai", title: "What is AI?", filePath: "/courses/ArtificialIntelligence/whatisAI.txt" },
+          { id: "History of AI", title: "History Of AI", filePath: "/courses/ArtificialIntelligence/History of AI.txt" },
+          { id: "Goals", title: "Goals Of AI", filePath: "/courses/ArtificialIntelligence/goals.txt" },
+          { id: "Types", title: "Types Of AI", filePath: "/courses/ArtificialIntelligence/TypesOfAI.txt" },
+          { id: "versus", title: "AI vs Humans", filePath: "/courses/ArtificialIntelligence/aiVShuman.txt" },
           { id: "ai-applications", title: "AI Applications", filePath: "/courses/ArtificialIntelligence/aiApplications.txt" },
         ],
       },

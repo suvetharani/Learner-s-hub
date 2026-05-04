@@ -1,0 +1,10 @@
+Artificial Intelligence began in the 1950s when scientists started exploring whether machines could think like humans.
+
+Key points:
+
+1956: The term "Artificial Intelligence" was introduced
+Early AI focused on simple rule-based systems
+1997: A computer defeated a world chess champion
+Today: AI is used in healthcare, education, business and daily life
+
+AI has evolved from basic programs to advanced learning systems.
