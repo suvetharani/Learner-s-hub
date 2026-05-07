@@ -40,7 +40,7 @@ router.post("/student-chat", async (req, res) => {
     const { messages = [] } = req.body;
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama3-8b-8192",
       messages: mapMessagesForGroq(
         messages,
         "You are a friendly AI tutor for college students. Explain concepts clearly, with examples, summaries, and step-by-step reasoning when helpful. Keep answers concise but helpful."

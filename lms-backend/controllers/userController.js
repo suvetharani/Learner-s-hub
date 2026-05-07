@@ -32,6 +32,43 @@ exports.getPendingStudents = async (req, res) => {
   }
 };
 
+// ================= STUDENT ATTENDANCE (WEEKLY) =================
+exports.getStudentAttendance = async (req, res) => {
+  try {
+    const last7Days = new Set();
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      last7Days.add(d.toISOString().slice(0, 10));
+    }
+
+    const students = await User.find({
+      role: "student",
+      status: "approved"
+    }).select("name email rollNumber studyTime.daily");
+
+    const attendance = students.map((student) => {
+      const weeklySeconds = (student.studyTime?.daily || []).reduce((total, entry) => {
+        if (!entry?.date || !last7Days.has(entry.date)) return total;
+        return total + (Number(entry.seconds) || 0);
+      }, 0);
+
+      return {
+        _id: student._id,
+        name: student.name,
+        email: student.email,
+        rollNumber: student.rollNumber,
+        weeklySeconds
+      };
+    });
+
+    res.json(attendance);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // ================= APPROVE STUDENT =================
 exports.approveStudent = async (req, res) => {
   try {

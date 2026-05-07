@@ -5,6 +5,7 @@ const User = require("../models/User");
 const {
   getApprovedStudents,
   getPendingStudents,
+  getStudentAttendance,
   approveStudent,
   trackStudyTime,
   getMyStudyTime,
@@ -27,6 +28,7 @@ router.get("/students/approved", getApprovedStudents);
 
 // GET pending students
 router.get("/students/pending", getPendingStudents);
+router.get("/students/attendance", getStudentAttendance);
 
 // Approve student
 router.put("/students/approve/:id", approveStudent);
