@@ -34,21 +34,19 @@ function AIAssistant() {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/ai/instructor-chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messages: current }),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/ai/instructor-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: current }),
+      });
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         const msg =
           data?.message ||
+          data?.error ||
           "AI is temporarily unavailable. Please try again later.";
         throw new Error(msg);
       }
@@ -64,7 +62,7 @@ function AIAssistant() {
         ...prev,
         {
           from: "bot",
-          text: err.message,
+          text: err?.message || "AI is temporarily unavailable. Please try again later.",
         },
       ]);
     } finally {
