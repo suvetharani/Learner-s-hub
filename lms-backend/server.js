@@ -16,6 +16,7 @@ const academicRoutes = require("./routes/academicRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const topicMediaRoutes = require("./routes/topicMediaRoutes");
 const topicQuizRoutes = require("./routes/topicQuizRoutes");
+const pushRoutes = require("./routes/pushRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +39,7 @@ app.use("/api/violations", violationRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/topic-media", topicMediaRoutes);
 app.use("/api/topic-quiz", topicQuizRoutes);
+app.use("/api/push", pushRoutes);
 
 app.use("/uploads", express.static("uploads"));
 

@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Message = require("../models/Message");
+const User = require("../models/User");
 const multer = require("multer");
+const { sendPushToUser } = require("../services/pushService");
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -30,6 +32,21 @@ router.post("/send", upload.single("file"), async (req, res) => {
     });
 
     await message.save();
+
+    // Fire-and-forget push notification for receiver (works when web push is configured).
+    Promise.resolve()
+      .then(async () => {
+        const sender = await User.findById(senderId).select("name").lean();
+        await sendPushToUser(receiverId, {
+          title: "New Message",
+          body: `Message from ${sender?.name || "a user"}`,
+          url: "/",
+          icon: "/favicon.ico",
+          badge: "/favicon.ico",
+        });
+      })
+      .catch(() => {});
+
     res.json(message);
   } catch (err) {
     res.status(500).json({ message: err.message });

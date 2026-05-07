@@ -284,13 +284,18 @@ router.get("/:id/responses", async (req, res) => {
     const responses = results.map((r) => {
       const studentId = r.student?._id?.toString();
       const relatedViolations = violations.filter((v) => {
-        if (v.student) {
-          return v.student.toString() === studentId;
-        }
-        if (v.studentSnapshot?.rollNumber && r.student?.rollNumber) {
-          return v.studentSnapshot.rollNumber === r.student.rollNumber;
-        }
-        return false;
+        const matchesStudentId = v.student
+          ? v.student.toString() === studentId
+          : false;
+
+        // Fallback to snapshot if for any reason student id doesn't match
+        // (e.g. casting differences, missing student ref, etc.)
+        const matchesRollNumber =
+          v.studentSnapshot?.rollNumber && r.student?.rollNumber
+            ? v.studentSnapshot.rollNumber === r.student.rollNumber
+            : false;
+
+        return matchesStudentId || matchesRollNumber;
       });
 
       return {
