@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { FaMinus, FaTimes } from "react-icons/fa";
+import { FaMinus, FaTimes, FaExpand, FaCompress } from "react-icons/fa";
 import "../../styles/student/chatbot.css";
 
 export default function Chatbot({ onClose }) {
   const [minimized, setMinimized] = useState(false);
+  const [maximized, setMaximized] = useState(false);
   const [messages, setMessages] = useState([
     {
       from: "bot",
@@ -60,12 +61,17 @@ export default function Chatbot({ onClose }) {
   };
 
   return (
-    <div className={`chatbot ${minimized ? "mini" : ""}`}>
+    <div className={`chatbot ${minimized ? "mini" : ""} ${maximized ? "max" : ""}`}>
       {/* HEADER */}
       <div className="chatbot-header">
         <span>AI Assistant</span>
 
         <div className="actions">
+          {maximized ? (
+            <FaCompress onClick={() => setMaximized(false)} />
+          ) : (
+            <FaExpand onClick={() => setMaximized(true)} />
+          )}
           <FaMinus onClick={() => setMinimized(!minimized)} />
           <FaTimes onClick={onClose} />
         </div>

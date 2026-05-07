@@ -1,0 +1,122 @@
+.attendance-cal-page {
+  background: #e8f9ff;
+  border: 1px solid #c4d9ff;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.attendance-cal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.attendance-cal-student {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.attendance-cal-subtitle {
+  color: #475569;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.attendance-cal-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attendance-cal-btn {
+  border: none;
+  background: #4f46e5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.attendance-cal-month {
+  font-weight: 600;
+  color: #111827;
+}
+
+.attendance-cal-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eef2ff;
+  overflow: hidden;
+}
+
+.attendance-cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #c4d9ff;
+}
+
+.attendance-cal-weekday {
+  padding: 10px 8px;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+}
+
+.attendance-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.attendance-cal-cell {
+  min-height: 88px;
+  padding: 10px 10px;
+  border-top: 1px solid #eef2ff;
+  border-right: 1px solid #eef2ff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attendance-cal-grid .attendance-cal-cell:nth-child(7n) {
+  border-right: none;
+}
+
+.attendance-cal-cell.blank {
+  background: #fbfbfb;
+}
+
+.attendance-cal-cell.used {
+  background: #ecfeff;
+}
+
+.attendance-cal-cell.unused {
+  background: #ffffff;
+}
+
+.attendance-cal-daynum {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.attendance-cal-duration {
+  font-size: 13px;
+  color: #334155;
+  background: #eef2ff;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.attendance-cal-loading {
+  padding: 20px 4px;
+}
+
+@media (max-width: 900px) {
+  .attendance-cal-cell {
+    min-height: 70px;
+    padding: 8px;
+  }
+}

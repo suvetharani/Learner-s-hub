@@ -25,6 +25,7 @@ const items = [
   { name: "messages", label: "Messages", icon: <FaEnvelope /> },
   { name: "notes", label: "Notes", icon: <FaStickyNote />, hasAdd: true },
   { name: "ranking", label: "Ranking", icon: <FaTrophy /> },
+  { name: "attendance", label: "Attendance", icon: <FaClipboardList /> },
   { name: "logout", label: "Logout", icon: <FaSignOutAlt /> },
 ];
 

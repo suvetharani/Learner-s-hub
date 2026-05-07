@@ -8,6 +8,7 @@ import "../../styles/instructor/studentlist.css";
 
 // For Student Details
 import "../../styles/instructor/studentdetails.css";
+import "../../styles/instructor/attendance-calendar.css";
 
 
 import { Routes, Route } from "react-router-dom";
@@ -31,6 +32,8 @@ import TestPage from "./TestPage";
 import CreateTest from "./CreateTest";
 import InstructorCourses from "./InstructorCourses";
 import InstructorCourseTopicPage from "./InstructorCourseTopicPage";
+import Attendance from "./Attendance";
+import StudentAttendanceCalendar from "./StudentAttendanceCalendar";
 
 /* ✅ NEW BOXES */
 import StudentsPreview from "../../components/instructor/StudentsPreview";
@@ -80,6 +83,8 @@ function InstructorHome() {
           <Route path="messages" element={<MessagePage />} />
           <Route path="notes" element={<Notes />} />
           <Route path="ranking" element={<Ranking />} />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="attendance/:id" element={<StudentAttendanceCalendar />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="profile" element={<Profile />} />
           <Route path="students/:id" element={<StudentProfile />} />

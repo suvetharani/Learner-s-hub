@@ -15,6 +15,15 @@
   z-index: 2000;
 }
 
+.chatbot.max {
+  inset: 12px;
+  width: auto;
+  height: auto;
+  bottom: auto;
+  right: auto;
+  border-radius: 14px;
+}
+
 @keyframes fadeIn {
   from {
     transform: translateY(10px);
@@ -119,5 +128,13 @@
     width: 95%;
     right: 10px;
     bottom: 10px;
+  }
+
+  .chatbot.max {
+    inset: 10px;
+    width: auto;
+    height: auto;
+    right: auto;
+    bottom: auto;
   }
 }
