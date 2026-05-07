@@ -3,11 +3,13 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import StudentHome from "./pages/student/StudentHome";
 import InstructorHome from "./pages/instructor/InstructorHome";
+import GlobalNotificationListener from "./components/GlobalNotificationListener";
 
 
 function App() {
   return (
     <BrowserRouter>
+      <GlobalNotificationListener />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

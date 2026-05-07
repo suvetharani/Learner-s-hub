@@ -82,37 +82,6 @@ const handleViolation = async (type) => {
   if (now - last < 5000) return;
   lastViolationAtByTypeRef.current[type] = now;
 
-  setWarnings((prev) => {
-    const next = Math.min(3, prev + 1);
-    // Show small hover/toast box for a few seconds
-    const id = Date.now() + Math.random();
-    const labelMap = {
-      "no-face": "Face not detected",
-      "multiple-faces": "Multiple faces detected",
-      "look-away": "Looking away frequently",
-      "look-down": "Looking down frequently",
-      "noise": "Noise detected",
-      "tab-switch": "Tab switching detected",
-      "copy-attempt": "Copy attempt detected",
-      default: "Rule violation detected",
-    };
-    const message = labelMap[type] || labelMap.default;
-
-    setWarningToasts((prevToasts) => [
-      ...prevToasts,
-      { id, message },
-    ]);
-    setTimeout(() => {
-      setWarningToasts((prevToasts) =>
-        prevToasts.filter((t) => t.id !== id)
-      );
-    }, 3500);
-    if (next >= 3) {
-      setTimeout(() => terminateExam(), 0);
-    }
-    return next;
-  });
-
   try {
     const res = await fetch("http://localhost:5000/api/violations", {
       method: "POST",
@@ -129,6 +98,36 @@ const handleViolation = async (type) => {
   } catch (e) {
     console.error("Violation error:", e);
   }
+
+  // Only after saving the violation, update warning UI and possibly terminate.
+  setWarnings((prev) => {
+    const next = Math.min(3, prev + 1);
+    // Show small hover/toast box for a few seconds
+    const toastId = Date.now() + Math.random();
+    const labelMap = {
+      "no-face": "Face not detected",
+      "multiple-faces": "Multiple faces detected",
+      "look-away": "Looking away frequently",
+      "look-down": "Looking down frequently",
+      "noise": "Noise detected",
+      "tab-switch": "Tab switching detected",
+      "copy-attempt": "Copy attempt detected",
+      default: "Rule violation detected",
+    };
+    const message = labelMap[type] || labelMap.default;
+
+    setWarningToasts((prevToasts) => [
+      ...prevToasts,
+      { id: toastId, message },
+    ]);
+    setTimeout(() => {
+      setWarningToasts((prevToasts) => prevToasts.filter((t) => t.id !== toastId));
+    }, 3500);
+    if (next >= 3) {
+      setTimeout(() => terminateExam(), 0);
+    }
+    return next;
+  });
 };
 handleViolationRef.current = handleViolation;
 const stream = location.state?.stream;

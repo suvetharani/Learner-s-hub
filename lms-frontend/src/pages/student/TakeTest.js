@@ -64,7 +64,6 @@ export default function TakeTest() {
               <p>{test.description}</p>
               <p><strong>Duration:</strong> {test.duration || 30} mins</p>
               <p><strong>Total Marks:</strong> {test.totalMarks ?? 0}</p>
-              <p><strong>Instructor:</strong> {test.instructor?.name}</p>
 
               <button
                 disabled={!acceptedRules}

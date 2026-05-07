@@ -9,11 +9,6 @@ function Header({ setIsOpen }) {
       {/* hamburger */}
       <FaBars className="hamburger" onClick={() => setIsOpen(true)} />
 
-      {/* search */}
-      <div className="search-box">
-        <input placeholder="Search..." />
-      </div>
-
       {/* icons */}
       <div className="header-icons">
         <FaRobot
