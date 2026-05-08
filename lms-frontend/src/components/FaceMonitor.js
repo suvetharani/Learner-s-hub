@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import * as faceapi from "face-api.js";
+import * as faceapi from "face-api.js/dist/face-api.esm.js";
 
 // Features implemented:
 // 1) Multiple face detection
