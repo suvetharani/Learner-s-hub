@@ -4,7 +4,7 @@ import { domainConfig } from "../../config/domainConfig";
 import "../../styles/student/courses.css";
 
 const RECENT_COURSES_KEY = "recentCourses";
-const RAW_API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const RAW_API_BASE = process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
 const trimmedApiBase = String(RAW_API_BASE || "").replace(/\/+$/, "");
 const API = trimmedApiBase.endsWith("/api")
   ? trimmedApiBase

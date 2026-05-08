@@ -9,7 +9,7 @@ export default function Ranking() {
     const fetchRanking = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/users/points/ranking"
+          `${process.env.REACT_APP_API_URL}/api/users/points/ranking`
         );
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {

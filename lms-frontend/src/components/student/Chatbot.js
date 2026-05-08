@@ -25,7 +25,7 @@ export default function Chatbot({ onClose }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/student-chat", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/ai/student-chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

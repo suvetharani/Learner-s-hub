@@ -12,7 +12,7 @@ function Attendance() {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/students/approved", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/students/approved`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

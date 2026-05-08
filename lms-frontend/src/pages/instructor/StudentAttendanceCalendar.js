@@ -34,8 +34,8 @@ function StudentAttendanceCalendar() {
     const load = async () => {
       try {
         const [profileRes, studyRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/users/profile/${id}`),
-          fetch(`http://localhost:5000/api/users/studytime/me/${id}`)
+          fetch(`${process.env.REACT_APP_API_URL}/api/users/profile/${id}`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/users/studytime/me/${id}`)
         ]);
 
         const profile = await profileRes.json().catch(() => ({}));

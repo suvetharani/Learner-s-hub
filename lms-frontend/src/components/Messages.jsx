@@ -18,7 +18,7 @@ export default function Messages() {
   useEffect(() => {
     if (!currentUser?._id) return;
 
-    socket.current = io("http://localhost:5000");
+    socket.current = io(`${process.env.REACT_APP_API_URL}`);
 
     socket.current.emit("addUser", currentUser._id);
 
@@ -42,7 +42,7 @@ export default function Messages() {
   }, []);
 
   const fetchUsers = async () => {
-    const res = await fetch("http://localhost:5000/api/users/all");
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/all`);
     const data = await res.json();
 
     setUsers(
@@ -55,7 +55,7 @@ export default function Messages() {
     if (!selectedUser) return;
 
     const res = await fetch(
-      `http://localhost:5000/api/messages/${currentUser._id}/${selectedUser._id}`
+      `${process.env.REACT_APP_API_URL}/api/messages/${currentUser._id}/${selectedUser._id}`
     );
     const data = await res.json();
     setMessages(data);
@@ -75,7 +75,7 @@ export default function Messages() {
     formData.append("text", message);
     if (attachment) formData.append("file", attachment);
 
-    const res = await fetch("http://localhost:5000/api/messages/send", {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/messages/send`, {
       method: "POST",
       body: formData,
     });
@@ -99,7 +99,7 @@ if (socket.current) {
 
   /* ================= DELETE SINGLE MESSAGE ================= */
   const deleteMessage = async (id) => {
-    await fetch(`http://localhost:5000/api/messages/${id}`, {
+    await fetch(`${process.env.REACT_APP_API_URL}/api/messages/${id}`, {
       method: "DELETE",
     });
 
@@ -123,7 +123,7 @@ if (socket.current) {
             <img
               src={
                 user.profileImage
-                  ? `http://localhost:5000/${user.profileImage}`
+                  ? `${process.env.REACT_APP_API_URL}/${user.profileImage}`
                   : "https://via.placeholder.com/40"
               }
               alt=""
@@ -141,7 +141,7 @@ if (socket.current) {
             <img
               src={
                 selectedUser.profileImage
-                  ? `http://localhost:5000/${selectedUser.profileImage}`
+                  ? `${process.env.REACT_APP_API_URL}/${selectedUser.profileImage}`
                   : "https://via.placeholder.com/40"
               }
               alt=""
@@ -164,14 +164,14 @@ if (socket.current) {
 
                 {msg.image && (
                   <img
-                    src={`http://localhost:5000/${msg.image}`}
+                    src={`${process.env.REACT_APP_API_URL}/${msg.image}`}
                     alt=""
                     className="chat-image"
                   />
                 )}
                 {msg.file && !msg.image && (
                   <a
-                    href={`http://localhost:5000/${msg.file}`}
+                    href={`${process.env.REACT_APP_API_URL}/${msg.file}`}
                     target="_blank"
                     rel="noreferrer"
                     download={msg.fileName || true}

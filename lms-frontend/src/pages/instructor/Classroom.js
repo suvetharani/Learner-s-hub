@@ -28,7 +28,7 @@ export default function Classroom() {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/courses");
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/courses`);
       const data = await res.json();
       if (res.ok) {
         setCourses(data);
@@ -50,7 +50,7 @@ export default function Classroom() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}`,
+        `${process.env.REACT_APP_API_URL}/api/courses/${courseId}`,
         {
           method: "DELETE",
           headers: {

@@ -77,7 +77,7 @@ export default function TestProctor() {
   const terminateExam = async () => {
   const studentId = localStorage.getItem("userId");
 
-  await fetch("http://localhost:5000/api/tests/submit", {
+  await fetch(`${process.env.REACT_APP_API_URL}/api/tests/submit`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

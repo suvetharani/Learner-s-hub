@@ -6,7 +6,7 @@ import "../../styles/student/courses.css";
 import "../../styles/instructor/topic-media.css";
 import "../../styles/student/topic-quiz.css";
 
-const RAW_API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const RAW_API_BASE = process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
 const trimmedApiBase = String(RAW_API_BASE || "").replace(/\/+$/, "");
 const API = trimmedApiBase.endsWith("/api")
   ? trimmedApiBase
@@ -119,7 +119,7 @@ export default function InstructorCourseTopicPage() {
   };
 
   const mediaUrl = (path) =>
-    path.startsWith("http") ? path : `http://localhost:5000/${path}`;
+    path.startsWith("http") ? path : `${process.env.REACT_APP_API_URL}/${path}`;
 
   return (
     <div className="basic-courses topic-page">

@@ -69,7 +69,7 @@ function CurrentCourses() {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/users/recent-courses/${userId}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/recent-courses/${userId}`);
       const data = await res.json();
       if (res.ok && Array.isArray(data)) {
         setCourses(data);

@@ -10,7 +10,7 @@ export default function TakeTest() {
   useEffect(() => {
     const fetchTests = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tests/all?forStudent=true");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tests/all?forStudent=true`);
         const data = await res.json();
         setTests(data);
       } catch (error) {

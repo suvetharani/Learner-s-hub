@@ -31,7 +31,7 @@ export default function Academics() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/academics?semester=${semesterNumber}&type=${
+        `${process.env.REACT_APP_API_URL}/api/academics?semester=${semesterNumber}&type=${
           tab === "materials" ? "material" : "question-paper"
         }`,
         {
@@ -119,7 +119,7 @@ export default function Academics() {
                     </span>
                   </div>
                   <a
-                    href={`http://localhost:5000/${item.fileUrl.replace(
+                    href={`${process.env.REACT_APP_API_URL}/${item.fileUrl.replace(
                       /\\/g,
                       "/"
                     )}`}

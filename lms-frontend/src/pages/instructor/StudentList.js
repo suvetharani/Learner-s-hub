@@ -14,14 +14,14 @@ function StudentList() {
   const fetchStudents = async () => {
     try {
       const approvedRes = await fetch(
-        "http://localhost:5000/api/users/students/approved",
+        `${process.env.REACT_APP_API_URL}/api/users/students/approved`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
 
       const pendingRes = await fetch(
-        "http://localhost:5000/api/users/students/pending",
+        `${process.env.REACT_APP_API_URL}/api/users/students/pending`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -45,7 +45,7 @@ function StudentList() {
   // Approve function
   const approveStudent = async (id) => {
     await fetch(
-      `http://localhost:5000/api/users/students/approve/${id}`,
+      `${process.env.REACT_APP_API_URL}/api/users/students/approve/${id}`,
       {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` }

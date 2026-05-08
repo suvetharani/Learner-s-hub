@@ -36,7 +36,7 @@ function WeeklyHours() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/users/studytime/me/${userId}`
+          `${process.env.REACT_APP_API_URL}/api/users/studytime/me/${userId}`
         );
         const data = await res.json();
         if (res.ok && data?.daily) {
@@ -69,7 +69,7 @@ function WeeklyHours() {
 
       const date = new Date().toISOString().slice(0, 10);
 
-      fetch("http://localhost:5000/api/users/studytime/track", {
+      fetch(`${process.env.REACT_APP_API_URL}/api/users/studytime/track`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

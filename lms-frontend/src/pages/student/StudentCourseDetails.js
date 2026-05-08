@@ -13,7 +13,7 @@ export default function StudentCourseDetails() {
 
   const fetchCourse = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/courses/${id}`,
+      `${process.env.REACT_APP_API_URL}/api/courses/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -34,7 +34,7 @@ export default function StudentCourseDetails() {
           <div key={index}>
             <h4>{file.fileName}</h4>
             <a
-              href={`http://localhost:5000/${file.fileUrl}`}
+              href={`${process.env.REACT_APP_API_URL}/${file.fileUrl}`}
               target="_blank"
               rel="noreferrer"
             >

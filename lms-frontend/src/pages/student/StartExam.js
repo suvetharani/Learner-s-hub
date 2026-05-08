@@ -48,7 +48,7 @@ const terminateExam = async () => {
   terminatedRef.current = true;
 
   try {
-    const res = await fetch("http://localhost:5000/api/tests/submit", {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tests/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -83,7 +83,7 @@ const handleViolation = async (type) => {
   lastViolationAtByTypeRef.current[type] = now;
 
   try {
-    const res = await fetch("http://localhost:5000/api/violations", {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/violations`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -230,7 +230,7 @@ const fetchTest = async () => {
 
   try {
 
-    const res = await fetch(`http://localhost:5000/api/tests/${id}?forStudent=true`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tests/${id}?forStudent=true`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch test (${res.status})`);
@@ -310,7 +310,7 @@ const submitExam = async () => {
   if (!confirmSubmit) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/tests/submit", {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tests/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

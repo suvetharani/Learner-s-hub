@@ -11,7 +11,7 @@ export default function CourseCreation() {
     if (!courseName) return alert("Enter course name");
 
     try {
-      const res = await fetch("http://localhost:5000/api/courses", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/courses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

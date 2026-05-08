@@ -14,7 +14,7 @@ export default function Classroom() {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/courses/student", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/courses/student`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,7 +33,7 @@ export default function Classroom() {
   const requestToJoin = async (courseId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/request`,
+        `${process.env.REACT_APP_API_URL}/api/courses/${courseId}/request`,
         {
           method: "PUT",
           headers: {

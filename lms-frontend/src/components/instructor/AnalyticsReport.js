@@ -10,7 +10,7 @@ function AnalyticsReport() {
       try {
         // total enrolled students (approved)
         const studentsRes = await fetch(
-          "http://localhost:5000/api/users/students/approved"
+          `${process.env.REACT_APP_API_URL}/api/users/students/approved`
         );
         if (studentsRes.ok) {
           const students = await studentsRes.json();
@@ -22,7 +22,7 @@ function AnalyticsReport() {
 
       try {
         const statsRes = await fetch(
-          "http://localhost:5000/api/tests/stats/summary"
+          `${process.env.REACT_APP_API_URL}/api/tests/stats/summary`
         );
         if (statsRes.ok) {
           const stats = await statsRes.json();
@@ -34,7 +34,7 @@ function AnalyticsReport() {
 
       try {
         const pointsRes = await fetch(
-          "http://localhost:5000/api/users/points/ranking"
+          `${process.env.REACT_APP_API_URL}/api/users/points/ranking`
         );
         if (pointsRes.ok) {
           const ranking = await pointsRes.json();

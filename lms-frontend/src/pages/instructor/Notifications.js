@@ -21,7 +21,7 @@ export default function Notifications() {
     if (!userId) return;
     const fetchNotifications = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/notifications/instructor/${userId}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/notifications/instructor/${userId}`);
         const data = await res.json();
         if (res.ok && Array.isArray(data)) setNotifications(data);
       } catch {

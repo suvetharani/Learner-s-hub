@@ -12,7 +12,7 @@ export default function TestPage() {
   useEffect(() => {
     const fetchTests = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/tests");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tests`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch tests");
@@ -39,7 +39,7 @@ export default function TestPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tests/${testId}`,
+        `${process.env.REACT_APP_API_URL}/api/tests/${testId}`,
         {
           method: "DELETE",
         }
@@ -73,7 +73,7 @@ export default function TestPage() {
     setUploading(true);
     try {
       const res = await fetch(
-        "http://localhost:5000/api/tests/generate-from-file",
+        `${process.env.REACT_APP_API_URL}/api/tests/generate-from-file`,
         {
           method: "POST",
           body: formData,

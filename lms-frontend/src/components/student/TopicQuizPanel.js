@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const RAW_API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const RAW_API_BASE = process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
 const trimmedApiBase = String(RAW_API_BASE || "").replace(/\/+$/, "");
 const API_BASE = trimmedApiBase.endsWith("/api")
   ? trimmedApiBase

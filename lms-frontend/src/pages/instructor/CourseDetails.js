@@ -21,7 +21,7 @@ export default function CourseDetails() {
   // 🔹 Fetch Join Requests
   const fetchRequests = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/courses/${id}/requests`,
+      `${process.env.REACT_APP_API_URL}/api/courses/${id}/requests`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -33,7 +33,7 @@ export default function CourseDetails() {
   // 🔹 Fetch Students
   const fetchStudents = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/courses/${id}/students`,
+      `${process.env.REACT_APP_API_URL}/api/courses/${id}/students`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -45,7 +45,7 @@ export default function CourseDetails() {
   // 🔹 Fetch Materials (we’ll read from course itself)
   const fetchMaterials = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/courses/instructor`,
+      `${process.env.REACT_APP_API_URL}/api/courses/instructor`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -61,7 +61,7 @@ export default function CourseDetails() {
   // 🔹 Approve Student
   const approveStudent = async (studentId) => {
     await fetch(
-      `http://localhost:5000/api/courses/${id}/approve/${studentId}`,
+      `${process.env.REACT_APP_API_URL}/api/courses/${id}/approve/${studentId}`,
       {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +81,7 @@ export default function CourseDetails() {
     formData.append("file", file);
 
     await fetch(
-      `http://localhost:5000/api/courses/${id}/upload`,
+      `${process.env.REACT_APP_API_URL}/api/courses/${id}/upload`,
       {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -98,7 +98,7 @@ export default function CourseDetails() {
   if (!confirmDelete) return;
 
   await fetch(
-    `http://localhost:5000/api/courses/${id}/material/${index}`,
+    `${process.env.REACT_APP_API_URL}/api/courses/${id}/material/${index}`,
     {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
@@ -116,7 +116,7 @@ const removeStudent = async (studentId) => {
   if (!confirmRemove) return;
 
   await fetch(
-    `http://localhost:5000/api/courses/${id}/remove/${studentId}`,
+    `${process.env.REACT_APP_API_URL}/api/courses/${id}/remove/${studentId}`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` },
@@ -182,7 +182,7 @@ const removeStudent = async (studentId) => {
   {/* 🔥 PROFILE IMAGE OR FALLBACK */}
   {stu.profileImage ? (
     <img
-      src={`http://localhost:5000/${stu.profileImage}`}
+      src={`${process.env.REACT_APP_API_URL}/${stu.profileImage}`}
       alt={stu.name}
       className="profile-img"
     />
@@ -233,7 +233,7 @@ const removeStudent = async (studentId) => {
 
 <div className="material-actions">
   <a
-    href={`http://localhost:5000/${file.fileUrl}`}
+    href={`${process.env.REACT_APP_API_URL}/${file.fileUrl}`}
     target="_blank"
     rel="noreferrer"
   >
@@ -241,7 +241,7 @@ const removeStudent = async (studentId) => {
   </a>
 
   <a
-    href={`http://localhost:5000/${file.fileUrl}`}
+    href={`${process.env.REACT_APP_API_URL}/${file.fileUrl}`}
     download
   >
     Download

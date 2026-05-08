@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = `${process.env.REACT_APP_API_URL}`;
 const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY || "";
 
 const urlBase64ToUint8Array = (base64String) => {

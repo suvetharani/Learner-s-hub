@@ -20,7 +20,7 @@ export default function Notes() {
 
   const fetchNotes = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/notes", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/notes`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -37,7 +37,7 @@ export default function Notes() {
 
   const createNote = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/notes", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/notes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export default function Notes() {
       const noteId = notes[selectedIndex]._id;
 
       const res = await fetch(
-        `http://localhost:5000/api/notes/${noteId}`,
+        `${process.env.REACT_APP_API_URL}/api/notes/${noteId}`,
         {
           method: "PUT",
           headers: {
@@ -107,7 +107,7 @@ export default function Notes() {
     try {
       const noteId = notes[selectedIndex]._id;
 
-      await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/notes/${noteId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

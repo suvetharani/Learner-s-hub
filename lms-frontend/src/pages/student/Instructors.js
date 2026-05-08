@@ -9,7 +9,7 @@ export default function Instructors() {
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/instructors");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/instructors`);
         const data = await res.json();
         setInstructors(data);
       } catch (err) {
@@ -28,8 +28,8 @@ export default function Instructors() {
             src={
               ins.profileImage
                 ? ins.profileImage.startsWith("uploads/")
-                  ? `http://localhost:5000/${ins.profileImage}`
-                  : `http://localhost:5000/uploads/${ins.profileImage}`
+                  ? `${process.env.REACT_APP_API_URL}/${ins.profileImage}`
+                  : `${process.env.REACT_APP_API_URL}/uploads/${ins.profileImage}`
                 : "https://via.placeholder.com/150"
             }
             alt={ins.name}

@@ -13,7 +13,7 @@ export default function StudentCourseView() {
   const fetchMaterials = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${id}/materials`,
+        `${process.env.REACT_APP_API_URL}/api/courses/${id}/materials`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,7 +46,7 @@ export default function StudentCourseView() {
               <h4>{file.fileName}</h4>
 
               <a
-                href={`http://localhost:5000/${file.fileUrl}`}
+                href={`${process.env.REACT_APP_API_URL}/${file.fileUrl}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -54,7 +54,7 @@ export default function StudentCourseView() {
               </a>
 
               <a
-                href={`http://localhost:5000/${file.fileUrl}`}
+                href={`${process.env.REACT_APP_API_URL}/${file.fileUrl}`}
                 download
               >
                 Download

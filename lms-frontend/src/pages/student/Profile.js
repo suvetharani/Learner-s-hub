@@ -10,7 +10,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       const res = await fetch(
-        `http://localhost:5000/api/users/profile/${userId}`
+        `${process.env.REACT_APP_API_URL}/api/users/profile/${userId}`
       );
       const data = await res.json();
       setUser(data);
@@ -27,7 +27,7 @@ export default function Profile() {
     formData.append("image", file);
 
     await fetch(
-      `http://localhost:5000/api/users/profile/image/${userId}`,
+      `${process.env.REACT_APP_API_URL}/api/users/profile/image/${userId}`,
       {
         method: "PUT",
         body: formData
@@ -44,7 +44,7 @@ export default function Profile() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/users/profile/${userId}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/profile/${userId}`, {
         method: "DELETE"
       });
       if (!res.ok) throw new Error("Failed to delete profile");
@@ -65,7 +65,7 @@ export default function Profile() {
           <img
   src={
     user.profileImage
-      ? `http://localhost:5000/${user.profileImage}`
+      ? `${process.env.REACT_APP_API_URL}/${user.profileImage}`
       : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
   }
   alt="profile"

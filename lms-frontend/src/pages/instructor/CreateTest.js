@@ -32,7 +32,7 @@ export default function CreateTest() {
       const fetchTest = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/tests/${id}`
+            `${process.env.REACT_APP_API_URL}/api/tests/${id}`
           );
 
           if (!response.ok) {
@@ -128,8 +128,8 @@ setQuestions(
 
     try {
       const url = id
-        ? `http://localhost:5000/api/tests/${id}`
-        : "http://localhost:5000/api/tests";
+        ? `${process.env.REACT_APP_API_URL}/api/tests/${id}`
+        : `${process.env.REACT_APP_API_URL}/api/tests`;
       const method = id ? "PUT" : "POST";
       const response = await fetch(url, {
         method,
@@ -355,7 +355,7 @@ function ResponsesTab({ testId, questions }) {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:5000/api/tests/${testId}/responses`
+          `${process.env.REACT_APP_API_URL}/api/tests/${testId}/responses`
         );
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {

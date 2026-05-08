@@ -10,7 +10,7 @@ export default function StudentProfile() {
   useEffect(() => {
     const fetchStudent = async () => {
       const res = await fetch(
-        `http://localhost:5000/api/users/profile/${id}`
+        `${process.env.REACT_APP_API_URL}/api/users/profile/${id}`
       );
       const data = await res.json();
       setStudent(data);
@@ -28,7 +28,7 @@ export default function StudentProfile() {
         <img
           src={
             student.profileImage
-              ? `http://localhost:5000/${student.profileImage}`
+              ? `${process.env.REACT_APP_API_URL}/${student.profileImage}`
               : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
           }
           alt="profile"
