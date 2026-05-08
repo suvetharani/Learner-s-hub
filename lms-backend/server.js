@@ -21,13 +21,30 @@ const pushRoutes = require("./routes/pushRoutes");
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://learner-s-hub-6x42.vercel.app/"
-  ],
-  credentials: true
-}));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://learner-s-hub-6x42.vercel.app",
+];
+
+const corsOriginValidator = (origin, callback) => {
+  // Allow non-browser calls (curl/postman/server-to-server).
+  if (!origin) return callback(null, true);
+
+  const isAllowedExact = allowedOrigins.includes(origin);
+  const isVercelPreview = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(origin);
+  if (isAllowedExact || isVercelPreview) return callback(null, true);
+
+  return callback(new Error("Not allowed by CORS"));
+};
+
+app.use(
+  cors({
+    origin: corsOriginValidator,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
@@ -53,10 +70,7 @@ app.use("/uploads", express.static("uploads"));
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://learner-s-hub-6x42.vercel.app/"
-    ],
+    origin: corsOriginValidator,
     methods: ["GET", "POST"],
     credentials: true,
   },
